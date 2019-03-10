@@ -9,7 +9,5 @@ class HottipConfig(AppConfig):
     def ready(self):
         logger.info('hottip ready')
         from hottip import schedule
-        schedule.start()
-
-        from . import signals
+        # schedule.start()
 

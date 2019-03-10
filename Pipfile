@@ -7,9 +7,9 @@ verify_ssl = true
 
 [packages]
 django = "*"
-
 # https://apscheduler.readthedocs.io/en/latest
 apscheduler = "*"
+requests = "*"
 
 [requires]
 python_version = "3.7"
