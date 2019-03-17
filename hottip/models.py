@@ -1,10 +1,12 @@
+import itertools
+import json
+import logging
+from enum import Enum
+
 from django.db import models
 from django.utils import timezone
-from enum import Enum
-import itertools
-import logging
-from . import services
-import json
+
+from . import fields, services
 
 logger = logging.getLogger(__name__)
 
@@ -13,10 +15,8 @@ class Tip(models.Model):
     title = models.CharField(max_length=200)
     text = models.TextField()
     enable = models.BooleanField(default=True)
-    created_at = models.DateTimeField(
-            default=timezone.now)
-    updated_at = models.DateTimeField(
-            default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'id:{self.id},title:{self.title}'
@@ -25,10 +25,8 @@ class Tip(models.Model):
 class Channel(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
-    created_at = models.DateTimeField(
-            default=timezone.now)
-    updated_at = models.DateTimeField(
-            default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     tips = models.ManyToManyField(Tip, through='Assignment')
 
@@ -59,7 +57,7 @@ class Channel(models.Model):
                     .order_by('id')[:adds_size])
             candidates = candidates + adds
 
-        tips = [ a.tip for a in candidates ]
+        tips = [a.tip for a in candidates]
         return (tips, candidates)
 
 
@@ -71,6 +69,8 @@ class Assignment(models.Model):
     channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
     tip = models.ForeignKey(Tip, on_delete=models.CASCADE)
     power = models.IntegerField(default=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = (('tip', 'channel', ), )
@@ -81,18 +81,20 @@ class Assignment(models.Model):
 
 class DistributedLog(models.Model):
     assignment = models.ForeignKey('hottip.Assignment', on_delete=models.CASCADE)
-    notified_at = models.DateTimeField(default=timezone.now)
+    distributed_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f'id:{self.id},assignment:"{self.assignment}",notified_at:{self.notified_at}'
+        return f'id:{self.id},assignment:"{self.assignment}",distributed_at:{self.distributed_at}'
 
+    @staticmethod
     def recent_logs_by_channel(channel_id, count):
         logs = DistributedLog.objects \
             .filter(assignment__channel=channel_id) \
-            .order_by('-notified_at')
+            .order_by('-distributed_at')
 
         return logs[:count]
 
+    @staticmethod
     def record_logs(assignments):
         DistributedLog.objects.bulk_create([
             DistributedLog(assignment=a) for a in assignments
@@ -109,12 +111,15 @@ class Distributor(models.Model):
         def choices(cls):
             return [(m.name, m.value) for m in cls]
 
-    schedule = models.CharField(max_length=200)
-    type = models.CharField(max_length=200,
-        choices=Type.choices())
-    attribute = models.TextField()
+    schedule = fields.JsonField(default={
+        'month': '*', 'day': 1, 'day_of_week': '*', 'hour': '*', 'minute': '*'
+    })
+    type = models.CharField(max_length=200, choices=Type.choices())
+    attribute = fields.JsonField(default={})
     tips_count = models.IntegerField(default=1)
     channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
     def attribute_json(self):
@@ -131,26 +136,29 @@ class Distributor(models.Model):
         channel = self.channel
         (tips, assigns) = channel.take_tips(self.tips_count)
 
-        DistributedLog.record_logs(assigns)
-
         logger.info(f'channel : {vars(channel)}')
         logger.info(f'tips : {tips}')
         logger.info(f'assigns : {assigns}')
 
-        if not tips:
-            return
+        if tips:
+            self.__do_distribute(tips)
+            DistributedLog.record_logs(assigns)
 
+
+    def __do_distribute(self, tips):
         attr_json = self.attribute_json()
 
         if self.type == self.Type.EMAIL:
             services.post_email(
                 attr_json['email'],
+                attr_json['subject'],
                 tips
             )
 
         elif self.type == self.Type.SLACK:
             services.post_slack(
                 attr_json['channel'],
+                attr_json['username'],
                 attr_json['icon'],
                 tips
             )
@@ -161,3 +169,6 @@ class Distributor(models.Model):
                 tips
             )
 
+        else:
+            logger.error('Invalid distribution type: [%s]', self.type)
+            raise RuntimeError(f'Invalid distribution type: [{self.type}]')

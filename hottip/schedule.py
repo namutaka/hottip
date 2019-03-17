@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 scheduler = BackgroundScheduler()
 
+
 def start():
     logger.info('Start hottip scheduler')
     scheduler.add_job(_monitor, 'interval', minutes=1)
@@ -20,22 +21,26 @@ def start():
 
     scheduler.print_jobs()
 
+
 def add_distoributor_emit_job(distributor):
-    logger.info('add distoribution job:', vars(distributor))
+    logger.info('add distoribution job: %s', vars(distributor))
     scheduler.add_job(
-            _emit_distributor,
-            CronTrigger.from_crontab(distributor.schedule),
-            args=[distributor.id],
-            id=f'distribute:{distributor.id}',
-            replace_existing=True)
+        _emit_distributor,
+        CronTrigger(distributor.schedule),
+        args=[distributor.id],
+        id=f'distribute:{distributor.id}',
+        replace_existing=True)
+
 
 def _monitor():
     scheduler.print_jobs()
+
 
 def _emit_distributor(distributor_id):
     distributor = Distributor.objects.get(id=distributor_id)
     logger.info(f'emitted distributor: {distributor_id}')
     distributor.distribute()
+
 
 @receiver(post_save, sender=Distributor)
 def distributor_handler(sender, instance, **kwargs):

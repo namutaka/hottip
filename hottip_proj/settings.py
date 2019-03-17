@@ -55,7 +55,9 @@ ROOT_URLCONF = 'hottip_proj.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -130,13 +132,13 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'all': {
-            'format': '\t'.join([
+            'format': ' '.join([
+                "%(asctime)s",
                 "[%(levelname)s]",
-                "asctime:%(asctime)s",
-                "module:%(module)s",
-                "message:%(message)s",
-                "process:%(process)d",
-                "thread:%(thread)d",
+                "pid:%(process)d,tid:%(thread)d",
+                "%(module)s",
+                "-",
+                "%(message)s",
             ])
         },
     },
@@ -157,4 +159,9 @@ LOGGING = {
         },
     },
 }
+
+
+# app settings
+
+SLACK_WEBHOOK_URL = os.getenv('SLACK_WEBHOOK_URL', '')
 

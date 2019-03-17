@@ -1,5 +1,22 @@
+import logging
+import json
 from django.contrib import admin
+from django.forms import widgets
 from .models import Tip, Channel, Distributor
+from . import fields
+
+logger = logging.getLogger(__name__)
+
+
+class PrettyJSONWidget(widgets.Textarea):
+
+    def format_value(self, value):
+        try:
+            value = json.dumps(value, indent=2, sort_keys=True)
+            return value
+        except Exception as e:
+            logger.warning("Error while formatting JSON: {}".format(e))
+            return super(PrettyJSONWidget, self).format_value(value)
 
 class TipAdmin(admin.ModelAdmin):
     exclude = ()
@@ -10,8 +27,12 @@ class TipInline(admin.TabularInline):
     model = Channel.tips.through
 
 class DistributorInline(admin.TabularInline):
+    template = 'admin/hottip/edit_inline/tabular.html'
     extra = 0
     model = Distributor
+    formfield_overrides = {
+        fields.JsonField: {'widget': PrettyJSONWidget}
+    }
 
 class ChannelAdmin(admin.ModelAdmin):
     inlines = [TipInline, DistributorInline]
