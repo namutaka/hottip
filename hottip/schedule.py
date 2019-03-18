@@ -26,7 +26,7 @@ def add_distoributor_emit_job(distributor):
     logger.info('add distoribution job: %s', vars(distributor))
     scheduler.add_job(
         _emit_distributor,
-        CronTrigger(distributor.schedule),
+        CronTrigger(**distributor.schedule),
         args=[distributor.id],
         id=f'distribute:{distributor.id}',
         replace_existing=True)

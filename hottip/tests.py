@@ -12,8 +12,7 @@ class ChannelModelTests(TestCase):
     def test_take_tips(self):
         channel = Channel.objects.create(name='text')
         for n in range(1, 5):
-            tip = Tip.objects.create(title=f'tip{n}')
-            channel.assignment_set.create(tip=tip)
+            tip = Tip.objects.create(channel=channel, title=f'tip{n}')
 
         print("test_take_tips")
         act = channel.take_tips(2)
@@ -23,11 +22,10 @@ class ChannelModelTests(TestCase):
     def test_take_tips__with_logs(self):
         channel = Channel.objects.create(name='text')
         for n in range(1, 6):
-            tip = Tip.objects.create(title=f'tip{n}')
-            channel.assignment_set.create(tip=tip)
+            tip = Tip.objects.create(channel=channel, title=f'tip{n}')
 
-        assigns = channel.assignment_set.all()[1:4]
-        DistributedLog.record_logs(assigns)
+        tips = channel.tips.all()[1:4]
+        DistributedLog.record_logs(tips)
 
         print("test_take_tips__with_logs")
         act = channel.take_tips(3)
@@ -35,53 +33,54 @@ class ChannelModelTests(TestCase):
 
 
 class DistributorModelTests(TestCase):
+    def __create_tips(self, channel, size):
+        for n in range(1, size):
+            Tip.objects.create(
+                channel=channel,
+                title=f'tip{n}',
+                text=dedent("""
+                    test message
+
+                    https://text.example.com/hoge
+                    #random
+                    @here
+                    text end
+                """).strip()
+                )
 
     def test_distribute(self):
         channel = Channel.objects.create(name='text')
-        for n in range(1, 3):
-            tip = Tip.objects.create(
-                    title=f'tip{n}',
-                    text=dedent("""
-                        test message
-
-                        https://text.example.com/hoge
-                        #random
-                        @here
-                        text end
-                    """).strip()
-                    )
-            channel.assignment_set.create(tip=tip)
+        self.__create_tips(channel, 3)
 
         distributor = Distributor(
-            type=Distributor.Type.SLACK,
+            type=Distributor.Type.SLACK.name,
             channel=channel,
             tips_count=2,
-            attribute="""
-            {
-            "channel": "#general",
-            "icon": ":ghost:",
-            "username": "HotTipです"
-            }
-            """)
+            attribute= {
+                "channel": "#general",
+                "icon": ":ghost:",
+                "username": "HotTipです"
+            })
         distributor.distribute()
 
         act_log = list(DistributedLog.objects.all())
 
-        print("xxx")
         pprint(act_log)
 
-    def attribute_field(self):
+    def test_attribute_field(self):
         channel = Channel.objects.create(name='text')
+        self.__create_tips(channel, 3)
+
         distributor = Distributor(
             channel=channel,
-            type=Distributor.Type.SLACK,
+            type=Distributor.Type.SLACK.name,
             tips_count=2,
             attribute= {
                 "channel": "#general",
                 "icon": ":ghost:",
                 "username": "HotTipです"
             },
-            schedule="1 1 * * *")
+            schedule={})
 
         print(distributor.attribute)
 
@@ -89,7 +88,9 @@ class DistributorModelTests(TestCase):
 
         act = Distributor.objects.all()[0]
         print(act.attribute)
+        print(act.type)
 
+        act.distribute()
 
 
 class DistributedLogModelTests(TestCase):
@@ -97,11 +98,10 @@ class DistributedLogModelTests(TestCase):
     def test_recent_logs_by_channel(self):
         channel = Channel.objects.create(name='text')
         for n in range(1, 5):
-            tip = Tip.objects.create(title=f'tip{n}')
-            channel.assignment_set.create(tip=tip)
+            tip = Tip.objects.create(channel=channel, title=f'tip{n}')
 
-        assigns = channel.assignment_set.all()[:3]
-        DistributedLog.record_logs(assigns)
+        tips = channel.tips.all()[:3]
+        DistributedLog.record_logs(tips)
 
         logs = list(DistributedLog.recent_logs_by_channel(channel.id, 2))
         pprint(logs)

@@ -11,6 +11,9 @@ logger = logging.getLogger(__name__)
 class PrettyJSONWidget(widgets.Textarea):
 
     def format_value(self, value):
+        if isinstance(value, str):
+            return super(PrettyJSONWidget, self).format_value(value)
+
         try:
             value = json.dumps(value, indent=2, sort_keys=True)
             return value
@@ -22,9 +25,9 @@ class TipAdmin(admin.ModelAdmin):
     exclude = ()
     readonly_fields = ('created_at', 'updated_at',)
 
-class TipInline(admin.TabularInline):
+class TipInline(admin.StackedInline):
     extra = 0
-    model = Channel.tips.through
+    model = Tip
 
 class DistributorInline(admin.TabularInline):
     template = 'admin/hottip/edit_inline/tabular.html'

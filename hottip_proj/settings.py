@@ -162,6 +162,7 @@ LOGGING = {
 
 
 # app settings
-
-SLACK_WEBHOOK_URL = os.getenv('SLACK_WEBHOOK_URL', '')
+from distutils.util import strtobool
+SLACK_WEBHOOK_URL = os.getenv('HOTTIP_SLACK_WEBHOOK_URL', '')
+HOTTIP_BATCH_MODE = strtobool(os.getenv('HOTTIP_BATCH_MODE', 'false'))
 

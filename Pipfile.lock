@@ -25,11 +25,11 @@
         },
         "apscheduler": {
             "hashes": [
-                "sha256:6599bc78901ee7e9be85cbd073d9cc155c42d2bc867c5cde4d4d1cc339ebfbeb",
-                "sha256:a8fe0c82d1c21bcf4a1b0e00aa35709f1f63fdd36446e406fa56cc0d51d3acc6"
+                "sha256:8f56b888fdc9dc57dd18d79c124b5093a01e29144be84e3e99130600eea34260",
+                "sha256:e885b0f2ad5887a69ceffc5de39e2b2f34b4aa80521b79b1f2db911340e68a66"
             ],
             "index": "pypi",
-            "version": "==3.5.3"
+            "version": "==3.6.0"
         },
         "certifi": {
             "hashes": [

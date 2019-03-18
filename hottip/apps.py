@@ -1,5 +1,6 @@
-from django.apps import AppConfig
 import logging
+from django.apps import AppConfig
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
@@ -8,6 +9,7 @@ class HottipConfig(AppConfig):
 
     def ready(self):
         logger.info('hottip ready')
-        from hottip import schedule
-        # schedule.start()
+        if settings.HOTTIP_BATCH_MODE:
+            from hottip import schedule
+            schedule.start()
 
