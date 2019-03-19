@@ -11,6 +11,7 @@ pylint = "*"
 django = "*"
 apscheduler = "*" # https://apscheduler.readthedocs.io/en/latest
 requests = "*"
+psycopg2-binary = "*"
 
 [requires]
 python_version = "3.7"
