@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      DATABASE_NAME: hottip
+      POSTGRES_USER: hottip
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432:5432
+
+  web:
+    image: hottip
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_HOST: db
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+
+

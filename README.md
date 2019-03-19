@@ -1,31 +1,26 @@
 
+How To Setup
+---------
 
-contents
-- id
-- title
-- body
-- enable
-- created_at
-- updated_at
+Write `.env` file
 
-frame
-- id
-- name
-- description
-- created_at
-- updated_at
-- frequency
+```
+HOTTIP_SLACK_WEBHOOK_URL={SLACK_INCOMING_WEBHOOK_URL}
+HOTTIP_BATCH_MODE=1
 
+DATABASE_TYPE=postgresql
+DATABASE_NAME=hottip
+DATABASE_USER=hottip
+DATABASE_PASSWORD=password
+DATABASE_HOST=localhost
+```
 
-assignment
-- id
-- frame_id
-- content_id
-- rate
+Run commands
 
-notified_histories
-- id
-- assinment_id
-- notified_at
-
+```
+$ docker-compose up -d
+$ docker-compose exec web python manage.py migrate
+$ docker-compose exec web python manage.py createsuperuser
+Enter admin user information.
+```
 
