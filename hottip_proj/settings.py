@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from distutils.util import strtobool
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -174,7 +175,6 @@ LOGGING = {
 
 
 # app settings
-from distutils.util import strtobool
 SLACK_WEBHOOK_URL = os.getenv('HOTTIP_SLACK_WEBHOOK_URL', '')
 HOTTIP_BATCH_MODE = strtobool(os.getenv('HOTTIP_BATCH_MODE', 'false'))
 

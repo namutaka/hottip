@@ -12,6 +12,7 @@ django = "*"
 apscheduler = "*" # https://apscheduler.readthedocs.io/en/latest
 requests = "*"
 psycopg2-binary = "*"
+uwsgi = "*"
 
 [requires]
 python_version = "3.7"

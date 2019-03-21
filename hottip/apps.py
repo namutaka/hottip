@@ -1,3 +1,4 @@
+import sys
 import logging
 from django.apps import AppConfig
 from django.conf import settings
@@ -8,7 +9,11 @@ class HottipConfig(AppConfig):
     name = 'hottip'
 
     def ready(self):
+        if sys.argv[1] != 'runserver':
+            return
+
         logger.info('hottip ready')
+
         if settings.HOTTIP_BATCH_MODE:
             from hottip import schedule
             schedule.start()

@@ -1,0 +1,9 @@
+# .dockerignore
+
+*.sqlite3
+.git/
+.gitignore
+__pycache__/
+.DS_Store
+.env
+
