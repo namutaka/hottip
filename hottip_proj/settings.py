@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'hottip',
+    'graphene_django',
 ]
 
 MIDDLEWARE = [
@@ -136,6 +137,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+LOGIN_URL = '/admin/login/'
 
 # Logging
 # https://docs.djangoproject.com/en/2.1/topics/logging/
@@ -171,6 +173,11 @@ LOGGING = {
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
     },
+}
+
+
+GRAPHENE = {
+    'SCHEMA': 'hottip.schema.schema'
 }
 
 

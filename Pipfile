@@ -6,6 +6,7 @@ verify_ssl = true
 [dev-packages]
 pylint = "*"
 "python-language-server[all]" = "*"
+django-lint = "*"
 
 [packages]
 django = "*"
@@ -13,6 +14,8 @@ apscheduler = "*" # https://apscheduler.readthedocs.io/en/latest
 requests = "*"
 psycopg2-binary = "*"
 uwsgi = "*"
+graphene-django = "*"
+django-filter = "*"
 
 [requires]
 python_version = "3.7"

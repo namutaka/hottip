@@ -5,6 +5,7 @@ from enum import Enum
 
 from django.db import models
 from django.utils import timezone
+from django.core import validators, exceptions
 
 from . import fields, services
 
@@ -13,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 class Channel(models.Model):
     name = models.CharField(max_length=200)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -40,7 +41,7 @@ class Channel(models.Model):
         if candidate_size < count:
             adds_size = count - candidate_size
             adds = list(tips.exclude(pk__in=[a.id for a in candidates])
-                    .order_by('id')[:adds_size])
+                        .order_by('id')[:adds_size])
             candidates = candidates + adds
 
         return candidates
@@ -63,7 +64,7 @@ class Tip(models.Model):
                                 related_query_name="tip")
 
     def __str__(self):
-        return f'{self.id}'
+        return self.title
 
 
 class DistributedLog(models.Model):
@@ -111,6 +112,18 @@ class Distributor(models.Model):
     def __str__(self):
         return f'{self.id}:{self.type}'
 
+    def clean(self):
+        self.parse_setting().clean()
+
+
+    def parse_setting(self):
+        if self.type == self.Type.EMAIL.name:
+            return EmailSetting(self.attribute)
+        elif self.type == self.Type.SLACK.name:
+            return SlackSetting(self.attribute)
+        elif self.type == self.Type.WEBHOOK.name:
+            return WebhookSetting(self.attribute)
+
 
     def distribute(self):
         channel = self.channel
@@ -120,33 +133,109 @@ class Distributor(models.Model):
         logger.info(f'tips : {tips}')
 
         if tips:
-            self.__do_distribute(tips)
+            setting = self.parse_setting()
+            self.__do_distribute(tips, setting)
             DistributedLog.record_logs(tips)
 
 
-    def __do_distribute(self, tips):
+    def __do_distribute(self, tips, setting):
         if self.type == self.Type.EMAIL.name:
             services.post_email(
-                self.attribute['email'],
-                self.attribute['subject'],
+                setting.email,
+                setting.subject,
                 tips
             )
 
         elif self.type == self.Type.SLACK.name:
             services.post_slack(
-                self.attribute['channel'],
-                self.attribute['username'],
-                self.attribute['icon'],
+                setting.channel,
+                setting.username,
+                setting.icon,
                 tips
             )
 
         elif self.type == self.Type.WEBHOOK.name:
             services.post_webhook(
-                self.attribute['webhook_url'],
+                setting.webhook_url,
                 tips
             )
 
         else:
             logger.error('Invalid distribution type: [%s]', self.type)
             raise RuntimeError(f'Invalid distribution type: [{self.type}]')
+
+
+class EmailSetting:
+    def __init__(self, fields):
+        self.email = fields.get('email')
+        self.subject = fields.get('subject')
+
+    def clean(self):
+        errors = {}
+
+        try:
+            if not self.email:
+                raise exceptions.ValidationError('Missing email.', code='required')
+            elif self.email:
+                validators.validate_email(self.email)
+        except exceptions.ValidationError as e:
+            errors['email'] = e.error_list
+
+        try:
+            if not self.subject:
+                raise exceptions.ValidationError('Missing subject.', code='required')
+        except exceptions.ValidationError as e:
+            errors['subject'] = e.error_list
+
+        if errors:
+            raise exceptions.ValidationError(errors)
+
+
+class SlackSetting:
+    def __init__(self, fields):
+        self.channel  = fields.get('channel')
+        self.username = fields.get('username')
+        self.icon     = fields.get('icon')
+
+
+    def clean(self):
+        errors = {}
+
+        try:
+            if not self.channel:
+                raise exceptions.ValidationError('Missing channel.', code='required')
+        except exceptions.ValidationError as e:
+            errors['channel'] = e.error_list
+
+        try:
+            if not self.username:
+                raise exceptions.ValidationError('Missing username.', code='required')
+        except exceptions.ValidationError as e:
+            errors['username'] = e.error_list
+
+        try:
+            if not self.icon:
+                raise exceptions.ValidationError('Missing icon.', code='required')
+        except exceptions.ValidationError as e:
+            errors['icon'] = e.error_list
+
+        if errors:
+            raise exceptions.ValidationError(errors)
+
+
+class WebhookSetting:
+    def __init__(self, fields):
+        self.webhook_url = fields.get('webhook_url')
+
+    def clean(self):
+        errors = {}
+
+        try:
+            if not self.webhook_url:
+                raise exceptions.ValidationError(_('Missing webhook_url.'), code='required')
+        except exceptions.ValidationError as e:
+            errors['webhook_url'] = e.error_list
+
+        if errors:
+            raise exceptions.ValidationError(errors)
 

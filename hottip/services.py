@@ -7,7 +7,7 @@ from textwrap import dedent
 logger = logging.getLogger(__name__)
 
 
-def post_mail():
+def post_email():
     pass
 
 
