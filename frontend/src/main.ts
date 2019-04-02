@@ -2,7 +2,7 @@ import Vue from "vue";
 import './plugins/vuetify'
 import App from "./App.vue";
 import router from "./router";
-import { createProvider } from "./vue-apollo";
+import { createProvider } from "./plugins/vue-apollo";
 
 Vue.config.productionTip = false;
 
