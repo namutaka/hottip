@@ -5,6 +5,8 @@
         <span>Vuetify</span>
         <span class="font-weight-light">MATERIAL DESIGN</span>
       </v-toolbar-title>
+      <router-link to="/">Home</router-link> |
+      <router-link to="/about">About</router-link>
       <v-spacer></v-spacer>
       <v-btn
         flat
@@ -16,23 +18,7 @@
     </v-toolbar>
 
     <v-content>
-      <HelloWorld/>
+      <router-view />
     </v-content>
   </v-app>
 </template>
-
-<script>
-import HelloWorld from './components/HelloWorld'
-
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  },
-  data () {
-    return {
-      //
-    }
-  }
-}
-</script>

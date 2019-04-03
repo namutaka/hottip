@@ -91,7 +91,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 export default class HelloWorld extends Vue {
   @Prop() private msg!: string;
 
-  @Prop() private ecosystem = [
+  ecosystem = [
         {
           text: 'vuetify-loader',
           href: 'https://github.com/vuetifyjs/vuetify-loader'
@@ -106,7 +106,7 @@ export default class HelloWorld extends Vue {
         }
       ];
 
-  @Prop() private importantLinks = [
+  importantLinks = [
         {
           text: 'Documentation',
           href: 'https://vuetifyjs.com'
@@ -129,7 +129,7 @@ export default class HelloWorld extends Vue {
         }
       ];
 
-  @Prop() private whatsNext = [
+  whatsNext = [
         {
           text: 'Explore components',
           href: 'https://vuetifyjs.com/components/api-explorer'
