@@ -49,6 +49,7 @@ class Channel(models.Model):
 
     class Meta:
         unique_together = (('name', ), )
+        ordering = ["-created_at"]
 
 
 class Tip(models.Model):

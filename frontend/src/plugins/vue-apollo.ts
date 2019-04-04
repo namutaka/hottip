@@ -4,6 +4,8 @@ import {
   createApolloClient,
   restartWebsockets
 } from "vue-cli-plugin-apollo/graphql-client";
+import Cookies from 'js-cookie'
+import { setContext } from 'apollo-link-context'
 
 // Install the vue plugin
 Vue.use(VueApollo)
@@ -12,7 +14,7 @@ Vue.use(VueApollo)
 const AUTH_TOKEN = "hottip-token"
 
 // Http endpoint
-const httpEndpoint = process.env.VUE_APP_GRAPHQL_HTTP
+const httpEndpoint: string = process.env.VUE_APP_GRAPHQL_HTTP
 
 // Config
 const defaultOptions = {
@@ -29,25 +31,35 @@ const defaultOptions = {
   // You need to pass a `wsEndpoint` for this to work
   websocketsOnly: false,
   // Is being rendered on the server?
-  ssr: false
+  ssr: false,
 
   // Override default apollo link
   // note: don't override httpLink here, specify httpLink options in the
   // httpLinkOptions property of defaultOptions.
-  // link: myLink
+  // Djangoのcsrftoken認証対応
+  link: setContext((_, { headers }) => {
+    return {
+      headers: {
+        ...headers,
+        'X-CSRFToken': Cookies.get('csrftoken')
+      }
+    }
+  })
 
   // Override default cache
   // cache: myCache
 
   // Override the way the Authorization header is set
-  // getAuth: (tokenName) => ...
+  // getAuth: (tokenName: string) => { }
 
   // Additional ApolloClient options
-  // apollo: { ... }
+  // apollo: { }
 
   // Client local data (see apollo-link-state)
   // clientState: { resolvers: { ... }, defaults: { ... } }
+
 }
+
 
 // Call this in the Vue app file
 export function createProvider(options = {}) {
@@ -80,7 +92,7 @@ export function createProvider(options = {}) {
 }
 
 // Manually call this when user log in
-export async function onLogin(apolloClient, token) {
+export async function onLogin(apolloClient: any, token: string) {
   if (typeof localStorage !== "undefined" && token) {
     localStorage.setItem(AUTH_TOKEN, token);
   }
@@ -94,7 +106,7 @@ export async function onLogin(apolloClient, token) {
 }
 
 // Manually call this when user log out
-export async function onLogout(apolloClient) {
+export async function onLogout(apolloClient: any) {
   if (typeof localStorage !== "undefined") {
     localStorage.removeItem(AUTH_TOKEN);
   }

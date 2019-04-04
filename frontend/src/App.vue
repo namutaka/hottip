@@ -5,8 +5,11 @@
         <span>Vuetify</span>
         <span class="font-weight-light">MATERIAL DESIGN</span>
       </v-toolbar-title>
+
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
+      <router-link to="/channels">Channel</router-link>
+
       <v-spacer></v-spacer>
       <v-btn
         flat

@@ -21,9 +21,14 @@ class ChannelNode(DjangoObjectType):
             'name', 'description')
         only_fields = (
             'name', 'description',
-            'created_at', 'updated_at',
-            'tags')
+            'created_at', 'updated_at',)
         interfaces = (graphene.relay.Node, )
+
+    raw_id = graphene.Int()
+
+    @staticmethod
+    def resolve_raw_id(data, info):
+        return data.id
 
 
 class TipNode(DjangoObjectType):
@@ -62,13 +67,12 @@ class DistributorNode(DjangoObjectType):
 
 class Query(graphene.ObjectType):
     me = graphene.Field(UserNode)
-    channels = DjangoFilterConnectionField(ChannelNode)
-    tips = DjangoFilterConnectionField(TipNode)
+    allChannels = DjangoFilterConnectionField(ChannelNode)
+    allTips = DjangoFilterConnectionField(TipNode)
     distributors = graphene.List(DistributorNode)
 
     def resolve_me(self, info):
         return info.context.user
-
 
     def resolve_distributors(self, info, **kwargs):
         return Distributor.objects.all()
