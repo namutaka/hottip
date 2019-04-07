@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Home from './views/Home.vue';
 import Channels from './views/Channels.vue';
+import ChannelPage from './views/ChannelPage.vue';
 
 Vue.use(Router);
 
@@ -20,8 +21,9 @@ export default new Router({
       component: Channels,
     },
     {
-      path: '/channels/:id',
+      path: '/channels/:channelId',
       name: 'channel',
+      component: ChannelPage,
     },
     {
       path: '/about',

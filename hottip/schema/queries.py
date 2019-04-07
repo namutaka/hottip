@@ -14,23 +14,6 @@ class UserNode(DjangoObjectType):
         exclude_fields = ('password')
 
 
-class ChannelNode(DjangoObjectType):
-    class Meta:
-        model = Channel
-        filter_fields = (
-            'name', 'description')
-        only_fields = (
-            'name', 'description',
-            'created_at', 'updated_at',)
-        interfaces = (graphene.relay.Node, )
-
-    raw_id = graphene.Int()
-
-    @staticmethod
-    def resolve_raw_id(data, info):
-        return data.id
-
-
 class TipNode(DjangoObjectType):
     class Meta:
         model = Tip
@@ -57,6 +40,7 @@ class DistributorNode(DjangoObjectType):
             'schedule', 'type',
             'attribute', 'tips_count',
             'channel', 'created_at', 'updated_at')
+        interfaces = (graphene.relay.Node, )
 
     attribute = graphene.List(graphene.NonNull(KeyValue))
 
@@ -65,8 +49,37 @@ class DistributorNode(DjangoObjectType):
         return [KeyValue(k, v) for k,v in data.attribute.items()]
 
 
+class ChannelNode(DjangoObjectType):
+    class Meta:
+        model = Channel
+        filter_fields = (
+            'id', 'name', 'description')
+        only_fields = (
+            'name', 'description',
+            'created_at', 'updated_at',)
+        interfaces = (graphene.relay.Node, )
+
+    raw_id = graphene.Int()
+
+    tips = graphene.List(TipNode)
+    distributors = graphene.List(DistributorNode)
+
+    @staticmethod
+    def resolve_raw_id(channel, info):
+        return channel.id
+
+    @staticmethod
+    def resolve_tips(channel, info):
+        return channel.tips.all()
+
+    @staticmethod
+    def resolve_distributors(channel, info):
+        return channel.distributors.all()
+
+
 class Query(graphene.ObjectType):
     me = graphene.Field(UserNode)
+    channel = graphene.relay.Node.Field(ChannelNode)
     allChannels = DjangoFilterConnectionField(ChannelNode)
     allTips = DjangoFilterConnectionField(TipNode)
     distributors = graphene.List(DistributorNode)

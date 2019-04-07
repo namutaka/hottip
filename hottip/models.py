@@ -106,7 +106,10 @@ class Distributor(models.Model):
     type = models.CharField(max_length=200, choices=Type.choices())
     attribute = fields.JsonField(default={})
     tips_count = models.IntegerField(default=1)
-    channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
+    channel = models.ForeignKey(Channel,
+                                on_delete=models.CASCADE,
+                                related_name="distributors",
+                                related_query_name="distributor")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

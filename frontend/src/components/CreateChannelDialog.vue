@@ -50,7 +50,7 @@ export default class CreateChannelDialog extends Vue {
   errors: { field: string; messages: string[] }[] = [];
 
   validate_error(field: string): string | boolean {
-    var error = this.errors.find(i => i.field == field);
+    let error = this.errors.find(i => i.field == field);
     if (error) {
       return error.messages.join('\n');
     } else {
@@ -86,6 +86,7 @@ export default class CreateChannelDialog extends Vue {
         .then(({ data: { createChannel: { channel, errors } } }) => {
           if (channel) {
             this.close();
+            this.$emit('create-channel', channel.id);
           } else {
             this.valid = false;
             this.errors = errors;
