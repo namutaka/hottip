@@ -30,7 +30,6 @@
         </tr>
       </template>
     </v-data-table>
-
   </v-container>
 </template>
 
@@ -64,7 +63,7 @@ export default class ChannelList extends Vue {
   }
 
   click(channelId: string) {
-    this.$emit('click-channel', channelId)
+    this.$emit('click-channel', channelId);
   }
 }
 </script>

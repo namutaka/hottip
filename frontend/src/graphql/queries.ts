@@ -53,7 +53,6 @@ export const CHANNEL = gql`
   }
 `;
 
-
 export const CREATE_CHANNEL = gql`
   mutation createChannel($name: String!, $description: String) {
     createChannel(name: $name, description: $description) {

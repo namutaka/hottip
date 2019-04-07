@@ -19,7 +19,7 @@ import CreateChannelDialog from '@/components/CreateChannelDialog.vue';
 })
 export default class Channel extends Vue {
   openChannel(channelId: string) {
-    this.$router.push({name: 'channel', params: {channelId}})
+    this.$router.push({ name: 'channel', params: { channelId } });
   }
 }
 </script>

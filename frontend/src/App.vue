@@ -2,7 +2,7 @@
   <v-app>
     <v-toolbar app>
       <v-btn icon flat to="/">
-      <v-icon>home</v-icon>
+        <v-icon>home</v-icon>
       </v-btn>
       <v-toolbar-title class="headline">
         Hot Tips
@@ -13,10 +13,7 @@
       <router-link to="/channels">Channel</router-link>
 
       <v-spacer></v-spacer>
-      <v-btn
-        icon
-        large
-      >
+      <v-btn icon large>
         <v-avatar size="32px" tile>
           <v-icon>account_circle</v-icon>
         </v-avatar>
