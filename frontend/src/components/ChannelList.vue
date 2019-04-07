@@ -11,7 +11,7 @@
       hide-actions
     >
       <template v-slot:items="props">
-        <tr span @click="click(props.item.node.id)">
+        <tr span @click="clickChannel(props.item.node.id)">
           <td>{{ props.item.node.rawId }}</td>
           <td class="text-sm-left text-wrap">{{ props.item.node.name }}</td>
           <td class="text-sm-left text-wrap">
@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Emit, Vue } from 'vue-property-decorator';
 import { ALL_CHANNELS } from '@/graphql/queries';
 
 @Component({
@@ -62,8 +62,9 @@ export default class ChannelList extends Vue {
     return this.$apollo.queries.allChannels.loading;
   }
 
-  click(channelId: string) {
-    this.$emit('click-channel', channelId);
+  @Emit()
+  clickChannel(channelId: string) {
+    return channelId;
   }
 }
 </script>

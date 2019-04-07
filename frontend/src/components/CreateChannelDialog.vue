@@ -16,17 +16,17 @@
               v-model="editedChannel.name"
               label="名前"
             ></v-text-field>
-            <v-text-field
+            <v-textarea
               v-model="editedChannel.description"
               label="説明"
-            ></v-text-field>
+            ></v-textarea>
           </v-container>
         </v-card-text>
       </v-form>
 
       <v-card-actions>
-        <v-spacer></v-spacer>
         <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
+        <v-spacer></v-spacer>
         <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
       </v-card-actions>
     </v-card>
@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Emit, Vue } from 'vue-property-decorator';
 import { CREATE_CHANNEL } from '@/graphql/queries';
 
 @Component({})
@@ -86,7 +86,7 @@ export default class CreateChannelDialog extends Vue {
         .then(({ data: { createChannel: { channel, errors } } }) => {
           if (channel) {
             this.close();
-            this.$emit('create-channel', channel.id);
+            this.createChannel(channel.id);
           } else {
             this.valid = false;
             this.errors = errors;
@@ -97,6 +97,11 @@ export default class CreateChannelDialog extends Vue {
           console.error(error);
         });
     }
+  }
+
+  @Emit()
+  createChannel(channelId: string) {
+    return channelId;
   }
 }
 </script>
