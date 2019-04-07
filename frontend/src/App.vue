@@ -1,22 +1,25 @@
 <template>
   <v-app>
     <v-toolbar app>
-      <v-toolbar-title class="headline text-uppercase">
-        <span>Vuetify</span>
-        <span class="font-weight-light">MATERIAL DESIGN</span>
+      <v-btn icon flat to="/">
+      <v-icon>home</v-icon>
+      </v-btn>
+      <v-toolbar-title class="headline">
+        Hot Tips
       </v-toolbar-title>
+      <v-spacer></v-spacer>
 
-      <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
       <router-link to="/channels">Channel</router-link>
 
       <v-spacer></v-spacer>
       <v-btn
-        flat
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
+        icon
+        large
       >
-        <span class="mr-2">Latest Release</span>
+        <v-avatar size="32px" tile>
+          <v-icon>account_circle</v-icon>
+        </v-avatar>
       </v-btn>
     </v-toolbar>
 
