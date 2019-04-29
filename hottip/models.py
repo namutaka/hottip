@@ -13,6 +13,10 @@ logger = logging.getLogger(__name__)
 
 
 class Channel(models.Model):
+    class Meta:
+        unique_together = (('name', ), )
+        ordering = ["-created_at"]
+
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -47,12 +51,10 @@ class Channel(models.Model):
         return candidates
 
 
+class Tip(models.Model):
     class Meta:
-        unique_together = (('name', ), )
         ordering = ["-created_at"]
 
-
-class Tip(models.Model):
     title = models.CharField(max_length=200)
     text = models.TextField()
     enable = models.BooleanField(default=True)

@@ -19,8 +19,10 @@
           <v-tab ripple>Distributors</v-tab>
 
           <v-tab-item>
-            <TipForm v-model="editTipDialog" :tip="editingTip" />
-            <TipList :tips="channel.tips" />
+            <TipList
+              :channelId="channel.id"
+              :tips="channel.tips"
+              @change-tip="changeTip" />
           </v-tab-item>
 
           <v-tab-item>
@@ -37,7 +39,6 @@ import { Component, Vue } from 'vue-property-decorator';
 import Channel from '@/components/Channel.vue';
 import TipList from '@/components/TipList.vue';
 import DistributorList from '@/components/DistributorList.vue';
-import TipForm from '@/components/TipForm.vue';
 import { CHANNEL } from '@/graphql/queries';
 
 @Component({
@@ -55,16 +56,23 @@ import { CHANNEL } from '@/graphql/queries';
     Channel,
     TipList,
     DistributorList,
-    TipForm,
   },
 })
 export default class ChannelPage extends Vue {
   private channel!: any;
   private editTipDialog = true;
-  private editingTip = {};
 
   get loading() {
     return this.$apollo.queries.channel.loading;
+  }
+
+  changeTip(tip: any) {
+    let index = this.channel.tips.findIndex((t: any) => t.id === tip.id);
+    if (index >= 0) {
+      this.channel.tips[index] = tip;
+    } else {
+      this.channel.tips.unshift(tip);
+    }
   }
 }
 </script>
