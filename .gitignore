@@ -3,5 +3,7 @@
 *.sqlite3
 __pycache__/
 
-/.env
+.env
+
+/frontend/out/
 
