@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Vue } from 'vue-property-decorator';
+import { Component, Emit, Watch, Vue } from 'vue-property-decorator';
 import { CREATE_CHANNEL } from '@/graphql/queries';
 
 @Component({})
@@ -45,9 +45,24 @@ export default class CreateChannelDialog extends Vue {
 
   dialog = false;
   defaultEditedChannel = { name: '', description: '' };
-  editedChannel = Object.assign({}, this.defaultEditedChannel);
+  editedChannel: any = {};
   valid = true;
   errors: { field: string; messages: string[] }[] = [];
+
+  readonly rules = {
+    name: [
+      (value: string) => !!value || 'Required.',
+      () => this.validate_error('name'),
+    ],
+  };
+
+  @Watch('dialog')
+  onDialogChanged(newVal: boolean) { 
+    // dialogが開いたときに初期化
+    if (newVal) {
+      this.editedChannel = Object.assign({}, this.defaultEditedChannel);
+    }
+  }
 
   validate_error(field: string): string | boolean {
     let error = this.errors.find(i => i.field == field);
@@ -58,18 +73,8 @@ export default class CreateChannelDialog extends Vue {
     }
   }
 
-  readonly rules = {
-    name: [
-      (value: string) => !!value || 'Required.',
-      () => this.validate_error('name'),
-    ],
-  };
-
   close() {
     this.dialog = false;
-    setTimeout(() => {
-      this.editedChannel = Object.assign({}, this.defaultEditedChannel);
-    }, 300);
   }
 
   save() {
