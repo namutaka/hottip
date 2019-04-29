@@ -93,6 +93,9 @@ class DistributedLog(models.Model):
 
 
 class Distributor(models.Model):
+    class Meta:
+        ordering = ["-created_at"]
+
     class Type(Enum):
         EMAIL = 'Email'
         SLACK = 'Slack'
@@ -121,7 +124,6 @@ class Distributor(models.Model):
     def clean(self):
         self.parse_setting().clean()
 
-
     def parse_setting(self):
         if self.type == self.Type.EMAIL.name:
             return EmailSetting(self.attribute)
@@ -129,7 +131,6 @@ class Distributor(models.Model):
             return SlackSetting(self.attribute)
         elif self.type == self.Type.WEBHOOK.name:
             return WebhookSetting(self.attribute)
-
 
     def distribute(self):
         channel = self.channel
@@ -142,7 +143,6 @@ class Distributor(models.Model):
             setting = self.parse_setting()
             self.__do_distribute(tips, setting)
             DistributedLog.record_logs(tips)
-
 
     def __do_distribute(self, tips, setting):
         if self.type == self.Type.EMAIL.name:

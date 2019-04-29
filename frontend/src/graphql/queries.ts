@@ -101,3 +101,67 @@ export const UPDATE_TIP = gql`
   }
 `;
 
+
+export const CREATE_DISTRIBUTOR = gql`
+  mutation createDistributor(
+      $channelId: ID!,
+      $schedule: KeyValueInput,
+      $type: String,
+      $attribute: String,
+      $tipsCount: String) {
+    result: createDistributor(
+        channelId: $channelId,
+        schedule: $schedule,
+        type:  $type,
+        attribute: $attribute,
+        tipsCount: $tipsCount
+    ) {
+      distributor {
+        id
+        type
+        schedule
+        tipsCount
+        attribute {
+          key
+          value
+        }
+      }
+      errors {
+        field
+        messages
+      }
+    }
+  }
+`;
+
+export const UPDATE_DISTRIBUTOR = gql`
+  mutation updateDistributor(
+      $id: ID!,
+      $schedule: String,
+      $type: String,
+      $attribute: [KeyValueInput!],
+      $tipsCount: Int) {
+    result: updateDistributor(
+        id: $id,
+        schedule: $schedule,
+        type: $type,
+        attribute: $attribute,
+        tipsCount: $tipsCount
+    ) {
+      distributor {
+        id
+        type
+        schedule
+        tipsCount
+        attribute {
+          key
+          value
+        }
+      }
+      errors {
+        field
+        messages
+      }
+    }
+  }
+`;

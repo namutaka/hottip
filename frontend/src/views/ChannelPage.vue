@@ -26,7 +26,10 @@
           </v-tab-item>
 
           <v-tab-item>
-            <DistributorList :distributors="channel.distributors" />
+            <DistributorList
+              :channelId="channel.id"
+              :distributors="channel.distributors"
+              @change-distributor="changeDistributor" />
           </v-tab-item>
         </v-tabs>
       </v-flex>
@@ -60,7 +63,6 @@ import { CHANNEL } from '@/graphql/queries';
 })
 export default class ChannelPage extends Vue {
   private channel!: any;
-  private editTipDialog = true;
 
   get loading() {
     return this.$apollo.queries.channel.loading;
@@ -72,6 +74,15 @@ export default class ChannelPage extends Vue {
       this.channel.tips[index] = tip;
     } else {
       this.channel.tips.unshift(tip);
+    }
+  }
+
+  changeDistributor(distributor: any) {
+    let index = this.channel.distributors.findIndex((d: any) => d.id === distributor.id);
+    if (index >= 0) {
+      this.channel.distributors[index] = distributor;
+    } else {
+      this.channel.distributors.unshift(distributor);
     }
   }
 }

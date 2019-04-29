@@ -10,7 +10,9 @@
       <h4 class="font-weight-medium">{{ channel.name }}</h4>
       <p>{{ channel.description }}</p>
     </v-card-text>
+
     <v-divider class="mx-3" />
+
     <v-card-actions class="font-weight-light mx-3 px-0 py-2">
       #{{ channel.rawId }}
       <v-divider vertical class="mx-2" />

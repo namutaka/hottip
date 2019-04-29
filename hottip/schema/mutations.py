@@ -80,6 +80,7 @@ class CreateDistributor(model_mutations.CreateMutation,
     class Arguments:
         channel_id = graphene.ID(required=True)
         type = graphene.String(required=True)
+        schedule = graphene.String()
         attribute = graphene.NonNull(graphene.List(graphene.NonNull(KeyValueInput)))
         tips_count = graphene.Int()
 
@@ -91,7 +92,7 @@ class CreateDistributor(model_mutations.CreateMutation,
 
         if 'attribute' in fields:
             keyValueList = fields.pop('attribute')
-            fields['attribute'] = dict((item['key'], item['value']) for item in keyValueList.items)
+            fields['attribute'] = dict((item['key'], item['value']) for item in keyValueList)
 
         return fields
 
@@ -103,14 +104,15 @@ class UpdateDistributor(model_mutations.UpdateMutation,
 
     class Arguments:
         type = graphene.String()
-        attribute = graphene.List(graphene.NonNull(KeyValueInput))
+        schedule = graphene.String()
         tips_count = graphene.Int()
+        attribute = graphene.List(graphene.NonNull(KeyValueInput))
 
     @classmethod
     def convert_fields(cls, fields):
         if 'attribute' in fields:
             keyValueList = fields.pop('attribute')
-            fields['attribute'] = dict((item['key'], item['value']) for item in keyValueList.items)
+            fields['attribute'] = dict((item['key'], item['value']) for item in keyValueList)
 
         return fields
 

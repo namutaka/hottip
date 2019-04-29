@@ -43,10 +43,15 @@ class DistributorNode(DjangoObjectType):
         interfaces = (graphene.relay.Node, )
 
     attribute = graphene.List(graphene.NonNull(KeyValue))
+    schedule = graphene.Field(graphene.String)
 
     @staticmethod
     def resolve_attribute(data, info):
-        return [KeyValue(k, v) for k,v in data.attribute.items()]
+        return [KeyValue(k, v) for k, v in data.attribute.items()]
+
+    @staticmethod
+    def resolve_schedule(data, info):
+        return Distributor._meta.get_field('schedule').get_prep_value(data.schedule)
 
 
 class ChannelNode(DjangoObjectType):
