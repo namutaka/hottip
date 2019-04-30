@@ -38,6 +38,7 @@
     "tests/**/*.tsx"
   ],
   "exclude": [
+    "types/globalTypes.ts",
     "node_modules"
   ]
 }

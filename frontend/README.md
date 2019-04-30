@@ -32,3 +32,15 @@ yarn run test:unit
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+## graphql typescript
+
+```
+# see https://docs.graphene-python.org/projects/django/en/latest/introspection/#usage
+pipenv run ./manage.py graphql_schema --schema hottip.schema.schema --out schema.json
+
+# see https://medium.com/open-graphql/automatically-generate-typescript-definitions-for-graphql-queries-with-apollo-codegen-e73eae72b561
+cd frontend; yarn run apollo codegen:generate --localSchemaFile=../schema.json --target=typescript --includes=src/graphql/\*.ts --tagName=gql --addTypename types
+```
+

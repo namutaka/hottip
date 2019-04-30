@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 class ErrorType(graphene.ObjectType):
     field = graphene.String(required=True)
-    messages = graphene.List(graphene.NonNull(graphene.String))
+    messages = graphene.List(graphene.NonNull(graphene.String), required=True)
 
     @staticmethod
     def list_from_dict(error_dict):
@@ -17,8 +17,7 @@ class ErrorType(graphene.ObjectType):
 
 
 class CreateMutation(graphene.Mutation):
-
-    errors = graphene.List(ErrorType)
+    errors = graphene.List(graphene.NonNull(ErrorType), required=True)
 
     @classmethod
     def __init_subclass__(cls, model, field_name, object_type, **kwargs):
@@ -40,7 +39,7 @@ class CreateMutation(graphene.Mutation):
             obj.full_clean()
             obj.save()
 
-            return cls(**{cls.field_name: obj})
+            return cls(**{cls.field_name: obj}, errors=[])
 
         except ValidationError as e:
             return cls(
@@ -48,7 +47,7 @@ class CreateMutation(graphene.Mutation):
 
 
 class UpdateMutation(graphene.Mutation):
-    errors = graphene.List(ErrorType)
+    errors = graphene.List(graphene.NonNull(ErrorType), required=True)
 
     class Arguments:
         pass
@@ -81,7 +80,7 @@ class UpdateMutation(graphene.Mutation):
         try:
             obj.full_clean()
             obj.save(update_fields=model_fields.keys())
-            return cls(**{cls.field_name: obj})
+            return cls(**{cls.field_name: obj}, errors=[])
 
         except ValidationError as e:
             return cls(
@@ -89,7 +88,7 @@ class UpdateMutation(graphene.Mutation):
 
 
 class DeleteMutation(graphene.Mutation):
-    ok = graphene.Boolean()
+    ok = graphene.Boolean(required=True)
 
     class Arguments:
         pass

@@ -105,10 +105,10 @@ export const UPDATE_TIP = gql`
 export const CREATE_DISTRIBUTOR = gql`
   mutation createDistributor(
       $channelId: ID!,
-      $schedule: KeyValueInput,
-      $type: String,
-      $attribute: String,
-      $tipsCount: String) {
+      $schedule: String,
+      $type: String!,
+      $attribute: [KeyValueInput!]!,
+      $tipsCount: Int) {
     result: createDistributor(
         channelId: $channelId,
         schedule: $schedule,

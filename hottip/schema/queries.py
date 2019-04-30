@@ -42,8 +42,8 @@ class DistributorNode(DjangoObjectType):
             'channel', 'created_at', 'updated_at')
         interfaces = (graphene.relay.Node, )
 
-    attribute = graphene.List(graphene.NonNull(KeyValue))
-    schedule = graphene.Field(graphene.String)
+    attribute = graphene.List(graphene.NonNull(KeyValue), required=True)
+    schedule = graphene.Field(graphene.String, required=True)
 
     @staticmethod
     def resolve_attribute(data, info):
@@ -66,8 +66,8 @@ class ChannelNode(DjangoObjectType):
 
     raw_id = graphene.Int()
 
-    tips = graphene.List(TipNode)
-    distributors = graphene.List(DistributorNode)
+    tips = graphene.List(graphene.NonNull(TipNode), required=True)
+    distributors = graphene.List(graphene.NonNull(DistributorNode), required=True)
 
     @staticmethod
     def resolve_raw_id(channel, info):

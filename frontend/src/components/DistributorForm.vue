@@ -60,9 +60,14 @@
 import { Component, Prop, Model, Emit, Watch, Vue } from 'vue-property-decorator';
 import { CREATE_DISTRIBUTOR, UPDATE_DISTRIBUTOR } from '@/graphql/queries';
 import Schedule from '@/components/Schedule.vue';
+import { QueryResult } from 'vue-apollo/types/vue-apollo';
+import { createDistributor } from '@/graphql/types/createDistributor.ts'
+import { updateDistributor } from '@/graphql/types/updateDistributor.ts'
+import { Distributor, KeyValue } from '@/types/models.ts'
+import { DistributorType } from '../../types/globalTypes';
 
 class Attribute {
-  constructor(private attribute: {key: string, value: string}[]) {};
+  constructor(private attribute: KeyValue[]) {};
 
   get(key: string) {
     let kv = this.attribute.find(kv => kv.key == key);
@@ -87,12 +92,19 @@ export default class DistributorForm extends Vue {
     form: HTMLFormElement;
   };
 
-  @Prop() private distributor!: any;
+  @Prop() private distributor!: Distributor;
   @Prop() private channelId!: string;
   @Model('change', { type: Boolean, default: false}) private dialogValue!: boolean;
   private attribute!: Attribute;
 
-  editedDistributor: any = {};
+  readonly defaultDistributor: Distributor = {
+    id: "",
+    type: DistributorType.SLACK,
+    schedule: "",
+    tipsCount: 1,
+    attribute: []
+  };
+  editedDistributor: Distributor = { ... this.defaultDistributor };
   valid = true;
   errors: { field: string; messages: string[] }[] = [];
 
@@ -110,10 +122,6 @@ export default class DistributorForm extends Vue {
     if (newVal) {
       // deepcopy
       this.editedDistributor = JSON.parse(JSON.stringify(this.distributor));
-      // graphql向けに不要フィールド除去
-      for (let att of this.editedDistributor.attribute) {
-        delete att.__typename
-      }
       this.attribute = new Attribute(this.editedDistributor.attribute);
     }
   }
@@ -134,10 +142,10 @@ export default class DistributorForm extends Vue {
   save() {
     this.errors = [];
     if (this.$refs.form.validate()) {
-      let mutation;
+      let mutation: Promise<QueryResult<createDistributor | updateDistributor>>;
       if (!this.editedDistributor.id) {
         mutation = this.$apollo
-          .mutate({
+          .mutate<createDistributor>({
             mutation: CREATE_DISTRIBUTOR,
             variables: {
               channelId: this.channelId,
@@ -147,7 +155,7 @@ export default class DistributorForm extends Vue {
           });
       } else {
         mutation = this.$apollo
-          .mutate({
+          .mutate<updateDistributor>({
             mutation: UPDATE_DISTRIBUTOR,
             variables: {
               ...this.editedDistributor
@@ -157,7 +165,11 @@ export default class DistributorForm extends Vue {
       }
 
       mutation
-        .then(({ data: { result: { distributor, errors } } }) => {
+        .then(({ data: { result }}) => {
+          if (!result) { throw "result is null"; }
+          return result;
+        })
+        .then(({ distributor, errors }) => {
           if (distributor) {
             this.close();
             this.changeDistributor(distributor);
@@ -177,7 +189,7 @@ export default class DistributorForm extends Vue {
   }
 
   @Emit()
-  changeDistributor(distributor: any) {
+  changeDistributor(distributor: Distributor) {
     return distributor;
   }
 }
