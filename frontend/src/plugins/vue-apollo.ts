@@ -6,6 +6,7 @@ import {
 } from 'vue-cli-plugin-apollo/graphql-client';
 import Cookies from 'js-cookie';
 import { setContext } from 'apollo-link-context';
+import { onError } from "apollo-link-error";
 
 // Install the vue plugin
 Vue.use(VueApollo);
@@ -14,7 +15,28 @@ Vue.use(VueApollo);
 const AUTH_TOKEN = 'hottip-token';
 
 // Http endpoint
-const httpEndpoint: string = process.env.VUE_APP_GRAPHQL_HTTP;
+const httpEndpoint: string | undefined = process.env.VUE_APP_GRAPHQL_HTTP;
+
+const LOGIN_URL = '/admin/login/';
+
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors)
+    graphQLErrors.map(({ message, locations, path }) =>
+      console.log(
+        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+      )
+    );
+  if (networkError) {
+    // @ts-ignore
+    const statusCode = networkError.statusCode || -1;
+    console.log(`[Network error]: status=${statusCode} ${networkError}`);
+
+    if (statusCode == 403) {
+      const url = window.location.pathname + window.location.search;
+      window.location.href = `${LOGIN_URL}?next=${encodeURIComponent(url)}`;
+    }
+  }
+});
 
 // Config
 const defaultOptions = {
@@ -37,14 +59,15 @@ const defaultOptions = {
   // note: don't override httpLink here, specify httpLink options in the
   // httpLinkOptions property of defaultOptions.
   // Djangoのcsrftoken認証対応
-  link: setContext((_, { headers }) => {
+  link: errorLink.concat(setContext((_, { headers }) => {
     return {
       headers: {
         ...headers,
         'X-CSRFToken': Cookies.get('csrftoken'),
+        'X-Requested-With': 'XMLHttpRequest',
       },
     };
-  }),
+  })),
 
   // Override default cache
   // cache: myCache
