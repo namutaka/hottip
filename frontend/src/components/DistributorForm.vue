@@ -12,6 +12,7 @@
           <v-text-field
             v-model="editedDistributor.tipsCount"
             label="# of Tips"
+              :rules="rules.tipsCount"
           />
 
           <label
@@ -25,18 +26,21 @@
             <v-text-field
               :value="attribute.get('channel')"
               @input="v => attribute.set('channel', v)"
+              :rules="[rules.required]"
               label="Channel"
             />
 
             <v-text-field
               :value="attribute.get('username')"
               @input="v => attribute.set('username', v)"
+              :rules="[rules.required]"
               label="Username"
             />
 
             <v-text-field
               :value="attribute.get('icon')"
               @input="v => attribute.set('icon', v)"
+              :rules="[rules.required]"
               label="Icon"
             />
 
@@ -47,7 +51,6 @@
           <v-btn flat @click="close">Cancel</v-btn>
           <v-spacer />
           <v-btn flat color="primary"
-            :disabled="!valid"
             @click="save">Save</v-btn>
         </v-card-actions>
 
@@ -78,7 +81,25 @@ class Attribute {
     let kv = this.attribute.find(kv => kv.key == key);
     if (kv) {
       kv.value = value;
+    } else {
+      this.attribute.push({key, value});
     }
+  }
+}
+
+// graphql向けオブジェクトで__typenameがあるとエラーになるため除去する
+function treat(obj: any): any {
+  if (Array.isArray(obj)) {
+    return obj.map((v) => treat(v));
+  } else if (typeof obj == 'object') {
+    let newObj: any = {...obj};
+    delete newObj['__typename'];
+    for (let key of Object.keys(newObj)) {
+      newObj[key] = treat(newObj[key]);
+    }
+    return newObj;
+  } else {
+    return obj;
   }
 }
 
@@ -93,23 +114,28 @@ export default class DistributorForm extends Vue {
   };
 
   @Prop() private distributor!: Distributor;
+  @Prop() private type!: DistributorType;
   @Prop() private channelId!: string;
   @Model('change', { type: Boolean, default: false}) private dialogValue!: boolean;
-  private attribute!: Attribute;
 
   readonly defaultDistributor: Distributor = {
     id: "",
     type: DistributorType.SLACK,
-    schedule: "",
+    schedule: '{"month": "*", "day": "*", "day_of_week": "*", "hour": "*", "minute": "*"}',
     tipsCount: 1,
     attribute: []
   };
-  editedDistributor: Distributor = { ... this.defaultDistributor };
-  valid = true;
-  errors: { field: string; messages: string[] }[] = [];
+  private editedDistributor: Distributor = { ... this.defaultDistributor };
+  private attribute: Attribute = new Attribute([]);
+  private valid = true;
+  private errors: { field: string; messages: string[] }[] = [];
 
   readonly rules = {
-    title: []
+    tipsCount: [
+      (v: string) => !!v || 'Required',
+      (v: string) => /^[0-9]*$/.test(v) || 'Invalid number'
+    ],
+    required: (v: string) => !!v || 'Required'
   };
 
   // このタグの v-model を dialog プロパティに連動させる
@@ -121,7 +147,11 @@ export default class DistributorForm extends Vue {
     // dialogが開いたときに初期化
     if (newVal) {
       // deepcopy
-      this.editedDistributor = JSON.parse(JSON.stringify(this.distributor));
+      this.editedDistributor = {
+        type: this.type,
+        ...this.defaultDistributor,
+        ...JSON.parse(JSON.stringify(this.distributor || {}))
+      };
       this.attribute = new Attribute(this.editedDistributor.attribute);
     }
   }
@@ -149,7 +179,7 @@ export default class DistributorForm extends Vue {
             mutation: CREATE_DISTRIBUTOR,
             variables: {
               channelId: this.channelId,
-              ...this.editedDistributor
+              ...treat(this.editedDistributor)
             },
             fetchPolicy: "no-cache"
           });
@@ -158,7 +188,7 @@ export default class DistributorForm extends Vue {
           .mutate<updateDistributor>({
             mutation: UPDATE_DISTRIBUTOR,
             variables: {
-              ...this.editedDistributor
+              ...treat(this.editedDistributor)
             },
             fetchPolicy: "no-cache"
           });

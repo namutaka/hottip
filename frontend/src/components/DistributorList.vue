@@ -3,9 +3,10 @@
     <DistributorForm v-model="editDialog"
       :channelId="channelId"
       :distributor="editingDistributor"
+      :type="edittingType"
       @change-distributor="changeDistributor" />
 
-    <v-btn primary @click="add('SLACK')">New</v-btn>
+    <v-btn primary @click="add(DistributorType.SLACK)">New</v-btn>
 
     <v-layout column>
       <template v-for="dist in distributors">
@@ -51,6 +52,7 @@ import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
 import { scheduleText } from '@/utils/ScheduleUtils';
 import DistributorForm from '@/components/DistributorForm.vue';
 import { Distributor } from '@/types/models';
+import { DistributorType } from '../../types/globalTypes';
 
 @Component({
   components: {
@@ -58,24 +60,29 @@ import { Distributor } from '@/types/models';
   },
 })
 export default class DistributorList extends Vue {
+  readonly DistributorType = DistributorType;
+
   @Prop() private distributors!: Distributor[];
   @Prop() private channelId!: string;
 
   private editDialog = false;
   private editingDistributor: Distributor | null = null;
+  private edittingType: DistributorType = DistributorType.SLACK;
 
   scheduleText(dist: Distributor) {
     return scheduleText(dist.schedule);
   }
 
-  add(type: string) {
+  add(type: DistributorType) {
     this.editDialog = true;
     this.editingDistributor = null;
+    this.edittingType = type;
   }
 
   edit(distributor: Distributor) {
     this.editDialog = true;
     this.editingDistributor = distributor;
+    this.edittingType = distributor.type;
   }
 
   @Emit()
