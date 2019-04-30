@@ -50,6 +50,10 @@
 <script lang="ts">
 import { Component, Prop, Model, Emit, Watch, Vue } from 'vue-property-decorator';
 import { CREATE_TIP, UPDATE_TIP } from '@/graphql/queries';
+import { Tip } from '@/types/models';
+import { QueryResult } from 'vue-apollo/types/vue-apollo';
+import { createTip } from '@/graphql/types/createTip'
+import { updateTip } from '@/graphql/types/updateTip'
 
 @Component({})
 export default class TipForm extends Vue {
@@ -57,11 +61,17 @@ export default class TipForm extends Vue {
     form: HTMLFormElement;
   };
 
-  @Prop() private tip!: any;
+  @Prop() private tip!: Tip;
   @Prop() private channelId!: string;
   @Model('change', { type: Boolean, default: false}) private dialogValue!: boolean;
 
-  editedTip: any = {};
+  defaultTip: Tip = {
+    id: "",
+    title: "",
+    text: "",
+    enable: true
+  };
+  editedTip: Tip = {...this.defaultTip};
   valid = true;
   errors: { field: string; messages: string[] }[] = [];
 
@@ -77,7 +87,7 @@ export default class TipForm extends Vue {
   onDialogValueChanged(newVal: boolean) { 
     // dialogが開いたときに初期化
     if (newVal) {
-      this.editedTip = {enable: true, ...this.tip};
+      this.editedTip = {...this.defaultTip, ...this.tip};
     }
   }
 
@@ -97,10 +107,10 @@ export default class TipForm extends Vue {
   save() {
     this.errors = [];
     if (this.$refs.form.validate()) {
-      let mutation;
+      let mutation: Promise<QueryResult<createTip | updateTip>>;
       if (!this.editedTip.id) {
         mutation = this.$apollo
-          .mutate({
+          .mutate<createTip>({
             mutation: CREATE_TIP,
             variables: {
               channelId: this.channelId,
@@ -110,7 +120,7 @@ export default class TipForm extends Vue {
           });
       } else {
         mutation = this.$apollo
-          .mutate({
+          .mutate<updateTip>({
             mutation: UPDATE_TIP,
             variables: {
               ...this.editedTip
@@ -120,7 +130,11 @@ export default class TipForm extends Vue {
       }
 
       mutation
-        .then(({ data: { result: { tip, errors } } }) => {
+        .then(({ data: { result }}) => {
+          if (!result) { throw "result is null"; }
+          return result;
+        })
+        .then(({ tip, errors }) => {
           if (tip) {
             this.close();
             this.changeTip(tip);
@@ -137,7 +151,7 @@ export default class TipForm extends Vue {
   }
 
   @Emit()
-  changeTip(tip: any) {
+  changeTip(tip: Tip) {
     return tip;
   }
 }

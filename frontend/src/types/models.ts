@@ -5,7 +5,7 @@
 import { DistributorType } from "../../types/globalTypes";
 
 export interface Tip {
-  id: string | null;
+  id: string;
   title: string;
   text: string;
   enable: boolean;
@@ -17,8 +17,7 @@ export interface KeyValue {
 }
 
 export interface Distributor {
-
-  id: string | null;
+  id: string;
   type: DistributorType;
   schedule: string;
   tipsCount: number;
@@ -26,7 +25,7 @@ export interface Distributor {
 }
 
 export interface Channel {
-  id: string | null;
+  id: string;
   rawId: number | null;
   name: string;
   description: string;

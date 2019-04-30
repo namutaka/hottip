@@ -7,7 +7,6 @@
 // ====================================================
 
 export interface createTip_result_tip {
-  __typename: "TipNode";
   /**
    * The ID of the object.
    */
@@ -18,13 +17,11 @@ export interface createTip_result_tip {
 }
 
 export interface createTip_result_errors {
-  __typename: "ErrorType";
   field: string;
   messages: string[];
 }
 
 export interface createTip_result {
-  __typename: "CreateTip";
   tip: createTip_result_tip | null;
   errors: createTip_result_errors[];
 }

@@ -44,6 +44,7 @@
 <script lang="ts">
 import { Component, Prop, Emit, Vue } from 'vue-property-decorator';
 import TipForm from '@/components/TipForm.vue';
+import { Tip } from '@/types/models';
 
 @Component({
   components: {
@@ -51,24 +52,24 @@ import TipForm from '@/components/TipForm.vue';
   },
 })
 export default class TipList extends Vue {
-  @Prop() private tips!: any[];
+  @Prop() private tips!: Tip[];
   @Prop() private channelId!: string;
 
   private editDialog = false;
-  private editingTip = {};
+  private editingTip: Tip | null = null;
 
   add() {
     this.editDialog = true;
-    this.editingTip = {};
+    this.editingTip = null;
   }
 
-  edit(tip: any) {
+  edit(tip: Tip) {
     this.editDialog = true;
     this.editingTip = tip;
   }
 
   @Emit()
-  changeTip(tip: any) {
+  changeTip(tip: Tip) {
     return tip;
   }
 }

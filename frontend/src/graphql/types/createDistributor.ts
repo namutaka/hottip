@@ -9,13 +9,11 @@ import { KeyValueInput, DistributorType } from "./../../../types/globalTypes";
 // ====================================================
 
 export interface createDistributor_result_distributor_attribute {
-  __typename: "KeyValue";
   key: string;
   value: string | null;
 }
 
 export interface createDistributor_result_distributor {
-  __typename: "DistributorNode";
   /**
    * The ID of the object.
    */
@@ -27,13 +25,11 @@ export interface createDistributor_result_distributor {
 }
 
 export interface createDistributor_result_errors {
-  __typename: "ErrorType";
   field: string;
   messages: string[];
 }
 
 export interface createDistributor_result {
-  __typename: "CreateDistributor";
   distributor: createDistributor_result_distributor | null;
   errors: createDistributor_result_errors[];
 }

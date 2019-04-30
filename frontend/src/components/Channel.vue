@@ -30,10 +30,11 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Channel as ChannelType } from '@/types/models'
 
 @Component({})
 export default class Channel extends Vue {
-  @Prop() private channel!: any;
+  @Prop() private channel!: ChannelType;
 }
 </script>
 

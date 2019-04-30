@@ -36,6 +36,7 @@
 <script lang="ts">
 import { Component, Emit, Watch, Vue } from 'vue-property-decorator';
 import { CREATE_CHANNEL } from '@/graphql/queries';
+import { createChannel } from '@/graphql/types/createChannel'
 
 @Component({})
 export default class CreateChannelDialog extends Vue {
@@ -44,8 +45,8 @@ export default class CreateChannelDialog extends Vue {
   };
 
   dialog = false;
-  defaultEditedChannel = { name: '', description: '' };
-  editedChannel: any = {};
+  defaultChannel = { name: '', description: '' };
+  editedChannel = {...this.defaultChannel};
   valid = true;
   errors: { field: string; messages: string[] }[] = [];
 
@@ -60,7 +61,7 @@ export default class CreateChannelDialog extends Vue {
   onDialogChanged(newVal: boolean) { 
     // dialogが開いたときに初期化
     if (newVal) {
-      this.editedChannel = Object.assign({}, this.defaultEditedChannel);
+      this.editedChannel = {...this.defaultChannel};
     }
   }
 
@@ -81,14 +82,18 @@ export default class CreateChannelDialog extends Vue {
     this.errors = [];
     if (this.$refs.form.validate()) {
       this.$apollo
-        .mutate({
+        .mutate<createChannel>({
           mutation: CREATE_CHANNEL,
           variables: {
             name: this.editedChannel.name,
             description: this.editedChannel.description,
           },
         })
-        .then(({ data: { createChannel: { channel, errors } } }) => {
+        .then(({ data: { createChannel }}) => {
+          if (!createChannel) { throw "result is null"; }
+          return createChannel;
+        })
+        .then(({ channel, errors }) => {
           if (channel) {
             this.close();
             this.createChannel(channel.id);

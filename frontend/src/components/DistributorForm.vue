@@ -61,9 +61,9 @@ import { Component, Prop, Model, Emit, Watch, Vue } from 'vue-property-decorator
 import { CREATE_DISTRIBUTOR, UPDATE_DISTRIBUTOR } from '@/graphql/queries';
 import Schedule from '@/components/Schedule.vue';
 import { QueryResult } from 'vue-apollo/types/vue-apollo';
-import { createDistributor } from '@/graphql/types/createDistributor.ts'
-import { updateDistributor } from '@/graphql/types/updateDistributor.ts'
-import { Distributor, KeyValue } from '@/types/models.ts'
+import { createDistributor } from '@/graphql/types/createDistributor'
+import { updateDistributor } from '@/graphql/types/updateDistributor'
+import { Distributor, KeyValue } from '@/types/models'
 import { DistributorType } from '../../types/globalTypes';
 
 class Attribute {

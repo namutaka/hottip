@@ -43,6 +43,8 @@ import Channel from '@/components/Channel.vue';
 import TipList from '@/components/TipList.vue';
 import DistributorList from '@/components/DistributorList.vue';
 import { CHANNEL } from '@/graphql/queries';
+import { channel_channel } from '@/graphql/types/channel'
+import { Tip, Distributor } from '@/types/models'
 
 @Component({
   apollo: {
@@ -62,14 +64,14 @@ import { CHANNEL } from '@/graphql/queries';
   },
 })
 export default class ChannelPage extends Vue {
-  private channel!: any;
+  private channel!: channel_channel;
 
   get loading() {
     return this.$apollo.queries.channel.loading;
   }
 
-  changeTip(tip: any) {
-    let index = this.channel.tips.findIndex((t: any) => t.id === tip.id);
+  changeTip(tip: Tip) {
+    let index = this.channel.tips.findIndex((t: Tip) => t.id === tip.id);
     if (index >= 0) {
       this.channel.tips[index] = tip;
     } else {
@@ -77,8 +79,8 @@ export default class ChannelPage extends Vue {
     }
   }
 
-  changeDistributor(distributor: any) {
-    let index = this.channel.distributors.findIndex((d: any) => d.id === distributor.id);
+  changeDistributor(distributor: Distributor) {
+    let index = this.channel.distributors.findIndex((d: Distributor) => d.id === distributor.id);
     if (index >= 0) {
       this.channel.distributors[index] = distributor;
     } else {

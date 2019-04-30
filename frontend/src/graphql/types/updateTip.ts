@@ -7,7 +7,6 @@
 // ====================================================
 
 export interface updateTip_result_tip {
-  __typename: "TipNode";
   /**
    * The ID of the object.
    */
@@ -18,13 +17,11 @@ export interface updateTip_result_tip {
 }
 
 export interface updateTip_result_errors {
-  __typename: "ErrorType";
   field: string;
   messages: string[];
 }
 
 export interface updateTip_result {
-  __typename: "UpdateTip";
   tip: updateTip_result_tip | null;
   errors: updateTip_result_errors[];
 }

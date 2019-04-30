@@ -7,7 +7,6 @@
 // ====================================================
 
 export interface allChannels_allChannels_edges_node {
-  __typename: "ChannelNode";
   /**
    * The ID of the object.
    */
@@ -20,7 +19,6 @@ export interface allChannels_allChannels_edges_node {
 }
 
 export interface allChannels_allChannels_edges {
-  __typename: "ChannelNodeEdge";
   /**
    * The item at the end of the edge
    */
@@ -32,7 +30,6 @@ export interface allChannels_allChannels_edges {
 }
 
 export interface allChannels_allChannels_pageInfo {
-  __typename: "PageInfo";
   /**
    * When paginating forwards, the cursor to continue.
    */
@@ -44,7 +41,6 @@ export interface allChannels_allChannels_pageInfo {
 }
 
 export interface allChannels_allChannels {
-  __typename: "ChannelNodeConnection";
   edges: (allChannels_allChannels_edges | null)[];
   pageInfo: allChannels_allChannels_pageInfo;
 }
