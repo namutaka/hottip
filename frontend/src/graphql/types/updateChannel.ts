@@ -3,10 +3,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: createChannel
+// GraphQL mutation operation: updateChannel
 // ====================================================
 
-export interface createChannel_result_channel {
+export interface updateChannel_result_channel {
   /**
    * The ID of the object.
    */
@@ -18,21 +18,22 @@ export interface createChannel_result_channel {
   updatedAt: any;
 }
 
-export interface createChannel_result_errors {
+export interface updateChannel_result_errors {
   field: string;
   messages: string[];
 }
 
-export interface createChannel_result {
-  channel: createChannel_result_channel | null;
-  errors: createChannel_result_errors[];
+export interface updateChannel_result {
+  channel: updateChannel_result_channel | null;
+  errors: updateChannel_result_errors[];
 }
 
-export interface createChannel {
-  result: createChannel_result | null;
+export interface updateChannel {
+  result: updateChannel_result | null;
 }
 
-export interface createChannelVariables {
-  name: string;
+export interface updateChannelVariables {
+  id: string;
+  name?: string | null;
   description?: string | null;
 }

@@ -1,8 +1,5 @@
 <template>
   <v-dialog v-model="dialog" max-width="500px">
-    <template v-slot:activator="{ on }">
-      <v-btn color="primary" dark class="mb-2" v-on="on">New Channel</v-btn>
-    </template>
     <v-card>
       <v-card-title>
         <span class="headline">新規作成</span>
@@ -25,9 +22,9 @@
       </v-form>
 
       <v-card-actions>
-        <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
+        <v-btn color="grey" flat @click="close">Cancel</v-btn>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
+        <v-btn color="primary darken-1" flat @click="save">Save</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -35,17 +32,20 @@
 
 <script lang="ts">
 import { Component, Emit, Watch, Vue } from 'vue-property-decorator';
-import { CREATE_CHANNEL } from '@/graphql/queries';
+import { CREATE_CHANNEL, UPDATE_CHANNEL } from '@/graphql/queries';
 import { createChannel } from '@/graphql/types/createChannel'
+import { updateChannel } from '@/graphql/types/updateChannel'
+import { QueryResult } from 'vue-apollo/types/vue-apollo';
+import { Channel } from '@/types/models'
 
 @Component({})
-export default class CreateChannelDialog extends Vue {
+export default class ChannelForm extends Vue {
   $refs!: {
     form: HTMLFormElement;
   };
 
   dialog = false;
-  defaultChannel = { name: '', description: '' };
+  defaultChannel = { id: '', name: '', description: '' };
   editedChannel = {...this.defaultChannel};
   valid = true;
   errors: { field: string; messages: string[] }[] = [];
@@ -57,12 +57,9 @@ export default class CreateChannelDialog extends Vue {
     ],
   };
 
-  @Watch('dialog')
-  onDialogChanged(newVal: boolean) { 
-    // dialogが開いたときに初期化
-    if (newVal) {
-      this.editedChannel = {...this.defaultChannel};
-    }
+  open() { 
+    this.dialog = true;
+    this.editedChannel = {...this.defaultChannel};
   }
 
   validate_error(field: string): string | boolean {
@@ -81,22 +78,36 @@ export default class CreateChannelDialog extends Vue {
   save() {
     this.errors = [];
     if (this.$refs.form.validate()) {
-      this.$apollo
-        .mutate<createChannel>({
-          mutation: CREATE_CHANNEL,
-          variables: {
-            name: this.editedChannel.name,
-            description: this.editedChannel.description,
-          },
-        })
-        .then(({ data: { createChannel }}) => {
-          if (!createChannel) { throw "result is null"; }
-          return createChannel;
+      let mutation: Promise<QueryResult<createChannel | updateChannel>>;
+      if (!this.editedChannel.id) {
+        mutation = this.$apollo
+          .mutate<createChannel>({
+            mutation: CREATE_CHANNEL,
+            variables: {
+              ...this.editedChannel
+            },
+            fetchPolicy: "no-cache"
+          });
+      } else {
+        mutation = this.$apollo
+          .mutate<updateChannel>({
+            mutation: UPDATE_CHANNEL,
+            variables: {
+              ...this.editedChannel
+            },
+            fetchPolicy: "no-cache"
+          });
+      }
+
+      mutation
+        .then(({ data: { result }}) => {
+          if (!result) { throw "result is null"; }
+          return result;
         })
         .then(({ channel, errors }) => {
           if (channel) {
             this.close();
-            this.createChannel(channel.id);
+            this.changeChannel(channel);
           } else {
             this.valid = false;
             this.errors = errors;
@@ -110,8 +121,8 @@ export default class CreateChannelDialog extends Vue {
   }
 
   @Emit()
-  createChannel(channelId: string) {
-    return channelId;
+  changeChannel(channel: Channel) {
+    return channel;
   }
 }
 </script>

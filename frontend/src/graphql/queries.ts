@@ -55,9 +55,14 @@ export const CHANNEL = gql`
 
 export const CREATE_CHANNEL = gql`
   mutation createChannel($name: String!, $description: String) {
-    createChannel(name: $name, description: $description) {
+    result: createChannel(name: $name, description: $description) {
       channel {
         id
+        rawId
+        name
+        description
+        createdAt
+        updatedAt
       }
       errors {
         field
@@ -66,6 +71,34 @@ export const CREATE_CHANNEL = gql`
     }
   }
 `;
+
+export const UPDATE_CHANNEL = gql`
+  mutation updateChannel($id: ID!, $name: String, $description: String) {
+    result: updateChannel(id: $id, name: $name, description: $description) {
+      channel {
+        id
+        rawId
+        name
+        description
+        createdAt
+        updatedAt
+      }
+      errors {
+        field
+        messages
+      }
+    }
+  }
+`;
+
+export const DELETE_CHANNEL = gql`
+  mutation deleteChannel($id: ID!) {
+    deleteChannel(id: $id) {
+      ok
+    }
+  }
+`;
+
 
 export const CREATE_TIP = gql`
   mutation createTip($channelId: ID!, $title: String!, $text: String, $enable: Boolean) {
