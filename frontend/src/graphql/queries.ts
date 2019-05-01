@@ -165,3 +165,11 @@ export const UPDATE_DISTRIBUTOR = gql`
     }
   }
 `;
+
+export const DELETE_DISTRIBUTOR = gql`
+  mutation deleteDistributor($id: ID!) {
+    deleteDistributor(id: $id) {
+      ok
+    }
+  }
+`;

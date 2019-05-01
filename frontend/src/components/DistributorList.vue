@@ -38,6 +38,8 @@
 
             <v-card-actions>
               <v-btn flat small color="primary" @click="edit(dist)">EDIT</v-btn>
+              <v-spacer/>
+              <v-btn flat small @click="doDelete(dist)">DELETE</v-btn>
             </v-card-actions>
 
           </v-card>
@@ -53,6 +55,8 @@ import { scheduleText } from '@/utils/ScheduleUtils';
 import DistributorForm from '@/components/DistributorForm.vue';
 import { Distributor } from '@/types/models';
 import { DistributorType } from '../../types/globalTypes';
+import { DELETE_DISTRIBUTOR } from '@/graphql/queries';
+import { deleteDistributor } from '@/graphql/types/deleteDistributor'
 
 @Component({
   components: {
@@ -85,8 +89,35 @@ export default class DistributorList extends Vue {
     this.edittingType = distributor.type;
   }
 
+  async doDelete(distributor: Distributor) {
+    if(await this.$root.$confirm("Delete", "Delete this dist")) {
+      let mutation = this.$apollo
+        .mutate<deleteDistributor>({
+          mutation: DELETE_DISTRIBUTOR,
+          variables: {
+            id: distributor.id
+          },
+          fetchPolicy: "no-cache"
+        })
+        .then(({ data: { deleteDistributor }}) => {
+          if (!deleteDistributor) { throw "result is null"; }
+          if (deleteDistributor.ok) {
+            this.deleteDistributor(distributor);
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+  }
+
   @Emit()
   changeDistributor(distributor: Distributor) {
+    return distributor;
+  }
+
+  @Emit()
+  deleteDistributor(distributor: Distributor) {
     return distributor;
   }
 }

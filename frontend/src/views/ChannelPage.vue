@@ -29,7 +29,9 @@
             <DistributorList
               :channelId="channel.id"
               :distributors="channel.distributors"
-              @change-distributor="changeDistributor" />
+              @change-distributor="changeDistributor"
+              @delete-distributor="deleteDistributor"
+               />
           </v-tab-item>
         </v-tabs>
       </v-flex>
@@ -86,6 +88,11 @@ export default class ChannelPage extends Vue {
     } else {
       this.channel.distributors.unshift(distributor);
     }
+  }
+
+  deleteDistributor(distributor: Distributor) {
+    let index = this.channel.distributors.findIndex((d: Distributor) => d.id === distributor.id);
+    this.channel.distributors.splice(index, 1);
   }
 }
 </script>

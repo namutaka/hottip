@@ -211,9 +211,6 @@ export default class DistributorForm extends Vue {
         })
         .catch(error => {
           console.error(error);
-          for (let e of error.networkError.result.errors) {
-            console.error(e.message);
-          }
         });
     }
   }
