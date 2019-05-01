@@ -22,7 +22,9 @@
             <TipList
               :channelId="channel.id"
               :tips="channel.tips"
-              @change-tip="changeTip" />
+              @change-tip="changeTip"
+              @delete-tip="deleteTip"
+              />
           </v-tab-item>
 
           <v-tab-item>
@@ -31,7 +33,7 @@
               :distributors="channel.distributors"
               @change-distributor="changeDistributor"
               @delete-distributor="deleteDistributor"
-               />
+              />
           </v-tab-item>
         </v-tabs>
       </v-flex>
@@ -79,6 +81,11 @@ export default class ChannelPage extends Vue {
     } else {
       this.channel.tips.unshift(tip);
     }
+  }
+
+  deleteTip(tip: Tip) {
+    let index = this.channel.tips.findIndex((t: Tip) => t.id === tip.id);
+    this.channel.tips.splice(index, 1);
   }
 
   changeDistributor(distributor: Distributor) {

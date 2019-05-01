@@ -23,6 +23,8 @@
 
           <v-card-actions>
             <v-btn flat small color="primary" @click="edit(tip)">EDIT</v-btn>
+            <v-spacer/>
+            <v-btn flat small @click="doDelete(tip)">DELETE</v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
@@ -45,6 +47,8 @@
 import { Component, Prop, Emit, Vue } from 'vue-property-decorator';
 import TipForm from '@/components/TipForm.vue';
 import { Tip } from '@/types/models';
+import { DELETE_TIP } from '@/graphql/queries';
+import { deleteTip } from '@/graphql/types/deleteTip'
 
 @Component({
   components: {
@@ -68,8 +72,35 @@ export default class TipList extends Vue {
     this.editingTip = tip;
   }
 
+  async doDelete(tip: Tip) {
+    if(await this.$root.$confirm("Delete", "Delete this tip")) {
+      let mutation = this.$apollo
+        .mutate<deleteTip>({
+          mutation: DELETE_TIP,
+          variables: {
+            id: tip.id
+          },
+          fetchPolicy: "no-cache"
+        })
+        .then(({ data: { deleteTip }}) => {
+          if (!deleteTip) { throw "result is null"; }
+          if (deleteTip.ok) {
+            this.deleteTip(tip);
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+  }
+
   @Emit()
   changeTip(tip: Tip) {
+    return tip;
+  }
+
+  @Emit()
+  deleteTip(tip: Tip) {
     return tip;
   }
 }

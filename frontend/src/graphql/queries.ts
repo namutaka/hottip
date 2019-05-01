@@ -101,6 +101,13 @@ export const UPDATE_TIP = gql`
   }
 `;
 
+export const DELETE_TIP = gql`
+  mutation deleteTip($id: ID!) {
+    deleteTip(id: $id) {
+      ok
+    }
+  }
+`;
 
 export const CREATE_DISTRIBUTOR = gql`
   mutation createDistributor(
