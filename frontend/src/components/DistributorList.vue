@@ -8,7 +8,7 @@
 
     <v-btn primary @click="add(DistributorType.SLACK)">New</v-btn>
 
-    <v-layout column>
+    <v-layout column v-if="distributors.length">
       <template v-for="dist in distributors">
         <v-flex :key="dist.id">
           <v-card pa-2>
@@ -45,6 +45,16 @@
           </v-card>
         </v-flex>
       </template>
+    </v-layout>
+
+    <v-layout column v-else>
+      <v-flex>
+        <v-card pa-2>
+          <v-card-text>
+            no-data
+          </v-card-text>
+        </v-card>
+      </v-flex>
     </v-layout>
   </v-card>
 </template>

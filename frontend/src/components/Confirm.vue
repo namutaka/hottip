@@ -24,8 +24,7 @@ import { Component, Prop } from 'vue-property-decorator';
  * Call it:
  * if (await this.$root.4confirm('Delete', 'Are you sure?', { color: 'red' })) {
  *   // yes
- * }
- * else {
+ * } else {
  *   // cancel
  * }
  */

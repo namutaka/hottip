@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-toolbar app>
+    <v-toolbar app dark color="indigo lighten-1">
       <v-btn icon flat to="/">
         <v-icon>home</v-icon>
       </v-btn>
