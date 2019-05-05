@@ -10,7 +10,11 @@
 
     <v-layout column v-else>
       <v-flex>
-        <Channel :channel="channel" />
+        <Channel
+          :channel="channel" 
+          @change-channel="changeChannel"
+          @delete-channel="deleteChannel"
+        />
       </v-flex>
 
       <v-flex>
@@ -48,7 +52,7 @@ import TipList from '@/components/TipList.vue';
 import DistributorList from '@/components/DistributorList.vue';
 import { CHANNEL } from '@/graphql/queries';
 import { channel_channel } from '@/graphql/types/channel'
-import { Tip, Distributor } from '@/types/models'
+import { Channel as ChannelType, Tip, Distributor } from '@/types/models'
 
 @Component({
   apollo: {
@@ -72,6 +76,14 @@ export default class ChannelPage extends Vue {
 
   get loading() {
     return this.$apollo.queries.channel.loading;
+  }
+
+  changeChannel(channel: ChannelType) {
+    Object.assign(this.channel, channel);
+  }
+
+  deleteChannel(channel: ChannelType) {
+    this.$router.push({name: 'channels'});
   }
 
   changeTip(tip: Tip) {

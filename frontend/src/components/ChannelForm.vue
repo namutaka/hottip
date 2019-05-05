@@ -57,9 +57,9 @@ export default class ChannelForm extends Vue {
     ],
   };
 
-  open() { 
+  open(channel: Channel | null = null) { 
     this.dialog = true;
-    this.editedChannel = {...this.defaultChannel};
+    this.editedChannel = {...this.defaultChannel, ...channel};
   }
 
   validate_error(field: string): string | boolean {

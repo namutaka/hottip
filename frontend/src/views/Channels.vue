@@ -1,13 +1,13 @@
 <template>
   <div class="channel_list">
+    <ChannelForm ref="channelForm" @change-channel="openChannel" />
+
     <ChannelList @click-channel="openChannel">
       <v-btn color="primary"
         dark
         class="mb-2"
         @click="add"
         >New Channel</v-btn>
-
-      <ChannelForm ref="channelForm" @change-channel="openChannel" />
     </ChannelList>
   </div>
 </template>

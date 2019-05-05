@@ -1,15 +1,48 @@
 <template>
   <v-card>
-    <v-flex absolute right>
-      <v-btn flat small icon>
-        <v-icon small color="grey lighten-1">edit</v-icon>
-      </v-btn>
-    </v-flex>
+    <ChannelForm ref="channelForm" @change-channel="changeChannel" />
 
-    <v-card-text>
-      <h4 class="font-weight-medium">{{ channel.name }}</h4>
-      <p>{{ channel.description }}</p>
-    </v-card-text>
+    <v-container class="px-0 py-1">
+      <v-layout row>
+        <v-flex xs11>
+          <v-card-title>
+            <h4 class="font-weight-medium channel-title">{{ channel.name }}</h4>
+          </v-card-title>
+          <v-card-text class="pt-0">
+            <pre>{{ channel.description }}</pre>
+          </v-card-text>
+        </v-flex>
+
+        <v-flex xs1>
+          <v-menu offset-y>
+            <template v-slot:activator="{ on }">
+              <v-btn flat small icon v-on="on">
+                <v-icon color="grey lighten-1">more_vert</v-icon>
+              </v-btn>
+            </template>
+
+            <v-list>
+              <v-list-tile @click="edit">
+                <v-list-tile-title>
+                  <v-icon color="grey lighten-1" class="mr-2">edit</v-icon>
+                  EDIT
+                </v-list-tile-title>
+              </v-list-tile>
+
+              <v-divider class="my-2" />
+
+              <v-list-tile @click="doDelete">
+                <v-list-tile-title>
+                  <v-icon color="grey lighten-1" class="mr-2">delete</v-icon>
+                  DELETE
+                </v-list-tile-title>
+              </v-list-tile>
+            </v-list>
+          </v-menu>
+        </v-flex>
+      </v-layout>
+    </v-container>
+
 
     <v-divider class="mx-3" />
 
@@ -29,13 +62,65 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import { ChannelFull } from '@/types/models'
+import { Component, Prop, Emit, Vue } from 'vue-property-decorator';
+import { Channel as ChannelType } from '@/types/models'
+import ChannelForm from '@/components/ChannelForm.vue';
+import { deleteChannel } from '@/graphql/types/deleteChannel'
+import { DELETE_CHANNEL } from '@/graphql/queries'
 
-@Component({})
+@Component({
+  components: {
+    ChannelForm
+  }
+})
 export default class Channel extends Vue {
-  @Prop() private channel!: ChannelFull;
+  $refs!: {
+    channelForm: ChannelForm
+  }
+
+  @Prop() private channel!: ChannelType;
+
+  edit() {
+    this.$refs.channelForm.open(this.channel);
+  }
+
+  async doDelete() {
+    if(await this.$root.$confirm("Delete", "Delete this channel")) {
+      let mutation = this.$apollo
+        .mutate<deleteChannel>({
+          mutation: DELETE_CHANNEL,
+          variables: {
+            id: this.channel.id
+          },
+          fetchPolicy: "no-cache"
+        })
+        .then(({ data: { deleteChannel }}) => {
+          if (!deleteChannel) { throw "result is null"; }
+          if (deleteChannel.ok) {
+            this.deleteChannel(this.channel);
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+  }
+
+
+  @Emit()
+  deleteChannel(channel: ChannelType) {
+    return channel;
+  }
+
+  @Emit()
+  changeChannel(channel: ChannelType) {
+    return channel;
+  }
 }
 </script>
 
-<style></style>
+<style>
+.channel-title {
+  word-break: break-all;
+}
+</style>
