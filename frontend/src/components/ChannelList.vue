@@ -13,7 +13,7 @@
         <td>{{ props.item.rawId }}</td>
         <td class="text-sm-left text-wrap">{{ props.item.name }}</td>
         <td class="text-sm-left text-wrap">
-          {{ props.item.description | ellipsis(20)}}
+          {{ props.item.description | ellipsis(20) }}
         </td>
         <td class="font-weight-light">
           {{ props.item.updatedAt | datetime }}

@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" max-width="500px">
     <v-card>
       <v-card-title>
-        <span class="headline">{{caption}}</span>
+        <span class="headline">{{ caption }}</span>
       </v-card-title>
 
       <v-form ref="form" v-model="valid" lazy-validation>
@@ -72,9 +72,9 @@ export default class ChannelForm extends Vue {
 
   get caption() {
     if (this.editedChannel.id) {
-      return "チャンネル編集";
+      return 'チャンネル編集';
     } else {
-      return "チャンネル作成";
+      return 'チャンネル作成';
     }
   }
 

@@ -20,7 +20,7 @@ export class Attribute {
 }
 
 export const ATTRIBUTE_FIELDS = {
-  [DistributorType.SLACK] : [
+  [DistributorType.SLACK]: [
     {
       key: 'channel',
       label: '送信先チャンネル名',
@@ -35,6 +35,6 @@ export const ATTRIBUTE_FIELDS = {
       key: 'icon',
       label: '送信Botのアイコン',
       placeholder: '例) :ghost:',
-    }
-  ]
+    },
+  ],
 };

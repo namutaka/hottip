@@ -10,18 +10,17 @@
             <div>
               Hot Tips はちょっとした情報を定期的に届けるルールです。<br />
               チャンネル に登録した Tips を指定した配信先に順番に送信します。<br />
-              最初に チャンネル を作成し、その中にTipsや配信先をそれぞれ設定してください。
+              最初に チャンネル
+              を作成し、その中にTipsや配信先をそれぞれ設定してください。
             </div>
           </v-card-title>
         </v-card>
       </v-flex>
 
       <v-flex>
-        <v-btn
-          color="primary"
-          dark
-          class="mb-2"
-          @click="add">チャンネル作成</v-btn>
+        <v-btn color="primary" dark class="mb-2" @click="add">
+          チャンネル作成
+        </v-btn>
 
         <ChannelList
           :channels="allChannels"

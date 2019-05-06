@@ -26,14 +26,14 @@
               <v-icon size="40px">account_circle</v-icon>
             </v-list-tile-avatar>
             <v-list-tile-content>
-              <v-list-tile-title>{{user.username}}</v-list-tile-title>
-              <v-list-tile-sub-title>{{user.email}}</v-list-tile-sub-title>
+              <v-list-tile-title>{{ user.username }}</v-list-tile-title>
+              <v-list-tile-sub-title>{{ user.email }}</v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile>
 
           <v-divider class="my-2" />
 
-          <v-list-tile avatar :to="{name: 'logout' }">
+          <v-list-tile avatar :to="{ name: 'logout' }">
             <v-list-tile-avatar />
             <v-list-tile-content>
               <v-list-tile-title>Logout</v-list-tile-title>
@@ -51,21 +51,21 @@
 
 <script lang="ts">
 import { Component, Prop, Emit, Vue } from 'vue-property-decorator';
-import { user, user_user } from '@/graphql/types/user'
-import { USER } from '@/graphql/queries'
+import { user, user_user } from '@/graphql/types/user';
+import { USER } from '@/graphql/queries';
 
 @Component({
   apollo: {
     user: {
-      query: USER
-    }
-  }
+      query: USER,
+    },
+  },
 })
 export default class App extends Vue {
   private user: user_user = {
-    id: "",
-    username: "",
-    email: ""
-  }
+    id: '',
+    username: '',
+    email: '',
+  };
 }
 </script>

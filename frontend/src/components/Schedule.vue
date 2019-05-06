@@ -2,11 +2,7 @@
   <div class="schedule_input mb-4">
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
-        <v-icon
-          color="primary"
-          dark
-          class="right"
-          v-on="on">help</v-icon>
+        <v-icon color="primary" dark class="right" v-on="on">help</v-icon>
       </template>
       <table>
         <tr>
@@ -37,9 +33,11 @@
 
     <v-container class="pa-0">
       <v-layout
-        v-for="([field, label]) in SCHEDULE_TEXT"
+        v-for="[field, label] in SCHEDULE_TEXT"
         :key="field"
-        row align-center>
+        row
+        align-center
+      >
         <v-flex xs2 class="text-xs-center pt-3">
           {{ label }}
         </v-flex>
@@ -91,12 +89,7 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Model,
-  Emit,
-  Vue,
-} from 'vue-property-decorator';
+import { Component, Model, Emit, Vue } from 'vue-property-decorator';
 import { SCHEDULE_TEXT, DAY_OF_WEEK_TEXT } from '@/utils/ScheduleUtils';
 
 @Component({})

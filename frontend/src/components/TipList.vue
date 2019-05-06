@@ -70,9 +70,7 @@ export default class TipList extends Vue {
 
   async doDelete(tip: Tip) {
     if (
-      await this.$root.$confirm(
-        'Tips削除',
-        `Tips "${tip.title}" を削除します`)
+      await this.$root.$confirm('Tips削除', `Tips "${tip.title}" を削除します`)
     ) {
       let mutation = this.$apollo
         .mutate<deleteTip>({

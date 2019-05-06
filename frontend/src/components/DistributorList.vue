@@ -16,22 +16,26 @@
             <v-list dense>
               <v-list-tile>
                 <v-list-tile-content
-                  class="item-label font-weight-light grey--text text--darken-2">
+                  class="item-label font-weight-light grey--text text--darken-2"
+                >
                   配信方法
                 </v-list-tile-content>
                 <v-list-tile-content>{{ dist.type }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
-                <v-list-tile-content 
-                  class="item-label font-weight-light grey--text text--darken-2">
+                <v-list-tile-content
+                  class="item-label font-weight-light grey--text text--darken-2"
+                >
                   一度に送信するTips数
                 </v-list-tile-content>
                 <v-list-tile-content
-                  >{{ dist.tipsCount }} 件づつ</v-list-tile-content>
+                  >{{ dist.tipsCount }} 件づつ</v-list-tile-content
+                >
               </v-list-tile>
               <v-list-tile>
                 <v-list-tile-content
-                  class="item-label font-weight-light grey--text text--darken-2">
+                  class="item-label font-weight-light grey--text text--darken-2"
+                >
                   配信タイミング
                 </v-list-tile-content>
                 <v-list-tile-content>{{
@@ -40,7 +44,8 @@
               </v-list-tile>
               <v-list-tile v-for="item in dist.attribute" :key="item.key">
                 <v-list-tile-content
-                  class="item-label font-weight-light grey--text text--darken-2">
+                  class="item-label font-weight-light grey--text text--darken-2"
+                >
                   {{ fieldLabel(dist.type, item.key) }}
                 </v-list-tile-content>
                 <v-list-tile-content>{{ item.value }}</v-list-tile-content>
@@ -50,7 +55,9 @@
             <v-card-actions>
               <v-btn flat small color="primary" @click="edit(dist)">EDIT</v-btn>
               <v-spacer />
-              <v-btn flat small color="grey" @click="doDelete(dist)">DELETE</v-btn>
+              <v-btn flat small color="grey" @click="doDelete(dist)"
+                >DELETE</v-btn
+              >
             </v-card-actions>
           </v-card>
         </v-flex>
@@ -77,7 +84,7 @@ import { Distributor } from '@/types/models';
 import { DistributorType } from '../../types/globalTypes';
 import { DELETE_DISTRIBUTOR } from '@/graphql/queries';
 import { deleteDistributor } from '@/graphql/types/deleteDistributor';
-import { ATTRIBUTE_FIELDS } from '@/utils/AttributeUtils'
+import { ATTRIBUTE_FIELDS } from '@/utils/AttributeUtils';
 
 @Component({
   components: {
@@ -123,7 +130,8 @@ export default class DistributorList extends Vue {
     if (
       await this.$root.$confirm(
         '配信設定削除',
-        `配信設定 "${distributor.type}" を削除します`)
+        `配信設定 "${distributor.type}" を削除します`,
+      )
     ) {
       let mutation = this.$apollo
         .mutate<deleteDistributor>({

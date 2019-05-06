@@ -3,7 +3,7 @@
     <v-form ref="form" v-model="valid" lazy-validation>
       <v-card>
         <v-card-title>
-          <span class="headline">{{caption}}</span>
+          <span class="headline">{{ caption }}</span>
         </v-card-title>
 
         <v-card-text>
@@ -16,7 +16,8 @@
           <label
             aria-hidden="true"
             class="v-label v-label--active theme--light"
-            style="left: 0px; right: auto; font-size: 12px;">
+            style="left: 0px; right: auto; font-size: 12px;"
+          >
             配信タイミング
           </label>
           <Schedule v-model="editedDistributor.schedule" />
@@ -51,7 +52,7 @@ import { createDistributor } from '@/graphql/types/createDistributor';
 import { updateDistributor } from '@/graphql/types/updateDistributor';
 import { Distributor, KeyValue } from '@/types/models';
 import { DistributorType } from '../../types/globalTypes';
-import { Attribute, ATTRIBUTE_FIELDS } from '@/utils/AttributeUtils'
+import { Attribute, ATTRIBUTE_FIELDS } from '@/utils/AttributeUtils';
 
 // graphql向けオブジェクトで__typenameがあるとエラーになるため除去する
 function normalize(obj: any): any {

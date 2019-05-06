@@ -13,10 +13,7 @@
             :rules="rules.title"
           />
 
-          <v-textarea
-            v-model="editedTip.text"
-            label="本文"
-          ></v-textarea>
+          <v-textarea v-model="editedTip.text" label="本文"></v-textarea>
 
           <v-switch value label="Use" v-model="editedTip.enable"></v-switch>
         </v-card-text>
@@ -50,9 +47,7 @@ export default class TipForm extends Vue {
       (value: string) => !!value || '必須入力です',
       () => this.validate_error('title'),
     ],
-    text: [
-      () => this.validate_error('text'),
-    ]
+    text: [() => this.validate_error('text')],
   };
 
   readonly defaultTip: Tip = {
@@ -84,9 +79,9 @@ export default class TipForm extends Vue {
 
   get caption() {
     if (this.editedTip.id) {
-      return "Tips編集";
+      return 'Tips編集';
     } else {
-      return "Tips作成";
+      return 'Tips作成';
     }
   }
 

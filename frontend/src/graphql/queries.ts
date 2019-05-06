@@ -2,13 +2,13 @@ import gql from 'graphql-tag';
 
 export const USER = gql`
   query user {
-    user : me {
+    user: me {
       id
       username
       email
     }
   }
-`
+`;
 
 export const ALL_CHANNELS = gql`
   query allChannels {

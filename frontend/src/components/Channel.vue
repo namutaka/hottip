@@ -88,7 +88,8 @@ export default class Channel extends Vue {
       await this.$root.$confirm(
         'チャンネル削除',
         'チャンネルを削除します。' +
-        '登録されているTipsや配信先設定もあわせて削除されます')
+          '登録されているTipsや配信先設定もあわせて削除されます',
+      )
     ) {
       let mutation = this.$apollo
         .mutate<deleteChannel>({

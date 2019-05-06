@@ -30,7 +30,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 
     if (statusCode == 403) {
       const url = window.location.pathname + window.location.search;
-      router.push({name: 'login', query: {next: url}});
+      router.push({ name: 'login', query: { next: url } });
     }
   }
 });
