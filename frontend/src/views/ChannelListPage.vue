@@ -3,7 +3,7 @@
     <ChannelForm ref="channelForm" @change-channel="openChannel" />
 
     <ChannelList
-      :channels="channels"
+      :channels="allChannels"
       @click-channel="openChannel"
       :loading="loading"
       >
@@ -22,7 +22,7 @@ import ChannelList from '@/components/ChannelList.vue';
 import ChannelForm from '@/components/ChannelForm.vue';
 import { Channel } from '@/types/models';
 import { ALL_CHANNELS } from '@/graphql/queries';
-import { allChannels_allChannels } from '@/graphql/types/allChannels'
+import { allChannels_allChannels, allChannels } from '@/graphql/types/allChannels'
 
 @Component({
   components: {
@@ -32,6 +32,13 @@ import { allChannels_allChannels } from '@/graphql/types/allChannels'
   apollo: {
     allChannels: {
       query: ALL_CHANNELS,
+      update: (data: allChannels) => {
+        if (data.allChannels && data.allChannels.edges) {
+          return data.allChannels.edges.map((edge: any) => edge.node);
+        } else {
+          return [];
+        }
+      }
     },
   },
 })
@@ -40,7 +47,7 @@ export default class Channels extends Vue {
     channelForm: ChannelForm
   }
 
-  allChannels!: allChannels_allChannels | null;
+  allChannels!: Channel[];
 
   mounted() {
     // ページ遷移時に内容を確実に更新
@@ -49,14 +56,6 @@ export default class Channels extends Vue {
 
   get loading(): boolean {
     return this.$apollo.queries.allChannels.loading;
-  }
-
-  get channels() {
-    if (this.allChannels && this.allChannels.edges) {
-      return this.allChannels.edges.map((edge: any) => edge.node);
-    } else {
-      return [];
-    }
   }
 
   add() {
