@@ -9,7 +9,7 @@ class HottipConfig(AppConfig):
     name = 'hottip'
 
     def ready(self):
-        if sys.argv[1] != 'runserver':
+        if len(sys.argv) >= 2 and sys.argv[1] != 'runserver':
             return
 
         logger.info('hottip ready')
@@ -17,4 +17,3 @@ class HottipConfig(AppConfig):
         if settings.HOTTIP_BATCH_MODE:
             from hottip import schedule
             schedule.start()
-

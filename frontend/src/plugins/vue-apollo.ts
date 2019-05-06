@@ -13,7 +13,7 @@ Vue.use(VueApollo);
 const AUTH_TOKEN = 'hottip-token';
 
 // Http endpoint
-const httpEndpoint: string | undefined = process.env.VUE_APP_GRAPHQL_HTTP;
+const httpEndpoint = '/graphql';
 
 // error handling
 const errorLink = onError(({ graphQLErrors, networkError }) => {

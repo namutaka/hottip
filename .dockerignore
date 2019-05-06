@@ -7,3 +7,7 @@ __pycache__/
 .DS_Store
 .env
 
+/frontend/out/
+/frontend/dist/
+/frontend/node_modules/
+/frontend/npm-debug.log

@@ -14,11 +14,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 from graphene_django.views import GraphQLView
 from hottip.views import PrivateGraphQLView
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('graphql', PrivateGraphQLView.as_view(graphiql=True)),
+
+    # デバッグ用認証不要Graphql
+    path('internal/graphql', GraphQLView.as_view(graphiql=True)),
+
+    # login,logoutのURLは別で指定されるためそれを避けるパス定義にする
+    # static リソースは別
+    re_path(r'^(?!admin|static).*$', TemplateView.as_view(template_name="hottip/index.html")) 
 ]
