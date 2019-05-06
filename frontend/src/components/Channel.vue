@@ -6,7 +6,7 @@
       <v-layout row>
         <v-flex xs11>
           <v-card-title>
-            <h4 class="font-weight-medium channel-title">{{ channel.name }}</h4>
+            <h3 class="font-weight-medium channel-title">{{ channel.name }}</h3>
           </v-card-title>
           <v-card-text class="pt-0">
             <pre>{{ channel.description }}</pre>

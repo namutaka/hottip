@@ -8,9 +8,25 @@ import Confirm from '@/components/Confirm.vue';
 
 Vue.config.productionTip = false;
 
+//
+// フィルタ
+//
+
 Vue.filter('datetime', function(date: string) {
   return moment(date).format('YYYY/MM/DD HH:mm');
 });
+
+Vue.filter('ellipsis', function(value: string, length: number) {
+  if (value.length <= length) {
+    return value;
+  } else {
+    return value.substring(0, length - 1) + '…';
+  }
+});
+
+//
+// $root 拡張
+//
 
 declare module 'vue/types/vue' {
   interface Vue {
@@ -23,6 +39,10 @@ Vue.mixin({
     $confirm: Confirm.open,
   },
 });
+
+//
+// Vue起動
+//
 
 new Vue({
   router,

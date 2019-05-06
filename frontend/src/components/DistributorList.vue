@@ -46,7 +46,7 @@
             <v-card-actions>
               <v-btn flat small color="primary" @click="edit(dist)">EDIT</v-btn>
               <v-spacer />
-              <v-btn flat small @click="doDelete(dist)">DELETE</v-btn>
+              <v-btn flat small color="grey" @click="doDelete(dist)">DELETE</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
