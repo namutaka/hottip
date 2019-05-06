@@ -24,5 +24,21 @@ export default new Router({
       name: 'channel',
       component: ChannelPage,
     },
+    {
+      path: '/admin/login',
+      name: 'login',
+      beforeEnter: (to, from, next) => {
+        next(false);
+        window.location.replace(to.fullPath); 
+      }
+    },
+    {
+      path: '/admin/logout/?next=/&v', // 終端スラッシュをトリムされるのでダミークエリ追加
+      name: 'logout',
+      beforeEnter: (to, from, next) => {
+        next(false);
+        window.location.replace(to.fullPath); 
+      }
+    }
   ],
 });
