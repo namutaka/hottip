@@ -9,9 +9,6 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
 
-      <router-link to="/about">About</router-link>
-      <router-link to="/channels">Channel</router-link>
-
       <v-spacer></v-spacer>
       <v-btn icon large>
         <v-avatar size="32px" tile>

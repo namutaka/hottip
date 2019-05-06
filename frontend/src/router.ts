@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from './views/Home.vue';
-import Channels from './views/Channels.vue';
+import ChannelListPage from './views/ChannelListPage.vue';
 import ChannelPage from './views/ChannelPage.vue';
 
 Vue.use(Router);
@@ -13,26 +12,17 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: Home,
+      redirect: { name: 'channels' }
     },
     {
       path: '/channels',
       name: 'channels',
-      component: Channels,
+      component: ChannelListPage,
     },
     {
       path: '/channels/:channelId',
       name: 'channel',
       component: ChannelPage,
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () =>
-        import(/* webpackChunkName: "about" */ './views/About.vue'),
     },
   ],
 });
