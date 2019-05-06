@@ -44,12 +44,6 @@ export default class ChannelForm extends Vue {
     form: HTMLFormElement;
   };
 
-  dialog = false;
-  defaultChannel = { id: '', name: '', description: '' };
-  editedChannel = {...this.defaultChannel};
-  valid = true;
-  errors: { field: string; messages: string[] }[] = [];
-
   readonly rules = {
     name: [
       (value: string) => !!value || 'Required.',
@@ -57,8 +51,24 @@ export default class ChannelForm extends Vue {
     ],
   };
 
+  readonly defaultChannel = {
+    id: '',
+    name: '',
+    description: ''
+  };
+
+  private dialog = false;
+  private valid = true;
+  private errors: { field: string; messages: string[] }[] = [];
+
+  private editedChannel = {...this.defaultChannel};
+
   open(channel: Channel | null = null) { 
     this.dialog = true;
+    this.valid = true;
+    this.errors = [];
+    this.$refs.form.resetValidation();
+
     this.editedChannel = {...this.defaultChannel, ...channel};
   }
 

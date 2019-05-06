@@ -113,23 +113,6 @@ export default class DistributorForm extends Vue {
     form: HTMLFormElement;
   };
 
-  @Prop() private distributor!: Distributor;
-  @Prop() private type!: DistributorType;
-  @Prop() private channelId!: string;
-  @Model('change', { type: Boolean, default: false}) private dialogValue!: boolean;
-
-  readonly defaultDistributor: Distributor = {
-    id: "",
-    type: DistributorType.SLACK,
-    schedule: '{"month": "*", "day": "*", "day_of_week": "*", "hour": "*", "minute": "*"}',
-    tipsCount: 1,
-    attribute: []
-  };
-  private editedDistributor: Distributor = { ... this.defaultDistributor };
-  private attribute: Attribute = new Attribute([]);
-  private valid = true;
-  private errors: { field: string; messages: string[] }[] = [];
-
   readonly rules = {
     tipsCount: [
       (v: string) => !!v || 'Required',
@@ -138,22 +121,39 @@ export default class DistributorForm extends Vue {
     required: (v: string) => !!v || 'Required'
   };
 
-  // このタグの v-model を dialog プロパティに連動させる
-  get dialog() { return this.dialogValue; }
-  set dialog(newDialog) {this.$emit('change', newDialog);}
+  readonly defaultDistributor: Distributor = {
+    id: "",
+    type: DistributorType.SLACK,
+    schedule: '{"month": "*", "day": "*", "day_of_week": "*", "hour": "*", "minute": "*"}',
+    tipsCount: 1,
+    attribute: []
+  };
 
-  @Watch('dialogValue')
-  onDialogValueChanged(newVal: boolean) { 
-    // dialogが開いたときに初期化
-    if (newVal) {
-      // deepcopy
-      this.editedDistributor = {
-        type: this.type,
-        ...this.defaultDistributor,
-        ...JSON.parse(JSON.stringify(this.distributor || {}))
-      };
-      this.attribute = new Attribute(this.editedDistributor.attribute);
-    }
+  private dialog: boolean = false;
+  private valid = true;
+  private errors: { field: string; messages: string[] }[] = [];
+
+  private channelId: String = "";
+  private editedDistributor: Distributor = { ... this.defaultDistributor };
+  private attribute: Attribute = new Attribute([]);
+
+  open(
+    channelId: string,
+    type: DistributorType,
+    distributor: Distributor | null = null,
+  ) {
+    this.dialog = true;
+    this.valid = true;
+    this.errors = [];
+    this.$refs.form.resetValidation();
+
+    this.channelId = channelId;
+    this.editedDistributor = {
+      ...this.defaultDistributor,
+      type,
+      ...JSON.parse(JSON.stringify(distributor || {})) // deepcopy
+    };
+    this.attribute = new Attribute(this.editedDistributor.attribute);
   }
 
   validate_error(field: string): string | boolean {

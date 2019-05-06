@@ -1,8 +1,7 @@
 <template>
   <v-card flat class="pa-2">
-    <TipForm v-model="editDialog"
-      :channelId="channelId"
-      :tip="editingTip"
+    <TipForm
+      ref="tipForm"
       @change-tip="changeTip" />
 
     <v-btn color="primary" @click="add">New Tip</v-btn>
@@ -56,20 +55,24 @@ import { deleteTip } from '@/graphql/types/deleteTip'
   },
 })
 export default class TipList extends Vue {
+  $refs!: {
+    tipForm: TipForm;
+  };
+
   @Prop() private tips!: Tip[];
   @Prop() private channelId!: string;
 
-  private editDialog = false;
-  private editingTip: Tip | null = null;
-
   add() {
-    this.editDialog = true;
-    this.editingTip = null;
+    this.$refs.tipForm.open(
+      this.channelId
+    );
   }
 
   edit(tip: Tip) {
-    this.editDialog = true;
-    this.editingTip = tip;
+    this.$refs.tipForm.open(
+      this.channelId,
+      tip
+    );
   }
 
   async doDelete(tip: Tip) {

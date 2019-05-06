@@ -56,13 +56,13 @@ import { Channel as ChannelType, Tip, Distributor } from '@/types/models'
 
 @Component({
   apollo: {
-    channel() {
-      return {
-        query: CHANNEL,
-        variables: {
+    channel: {
+      query: CHANNEL,
+      variables() {
+        return {
           id: this.$route.params.channelId,
-        },
-      };
+        }
+      },
     },
   },
   components: {
@@ -89,7 +89,8 @@ export default class ChannelPage extends Vue {
   changeTip(tip: Tip) {
     let index = this.channel.tips.findIndex((t: Tip) => t.id === tip.id);
     if (index >= 0) {
-      this.channel.tips[index] = tip;
+      // NOTE 代入だとdistributors更新イベントが発生しない
+      Object.assign(this.channel.tips[index], tip);
     } else {
       this.channel.tips.unshift(tip);
     }
@@ -103,7 +104,8 @@ export default class ChannelPage extends Vue {
   changeDistributor(distributor: Distributor) {
     let index = this.channel.distributors.findIndex((d: Distributor) => d.id === distributor.id);
     if (index >= 0) {
-      this.channel.distributors[index] = distributor;
+      // NOTE 代入だとdistributors更新イベントが発生しない
+      Object.assign(this.channel.distributors[index], distributor);
     } else {
       this.channel.distributors.unshift(distributor);
     }

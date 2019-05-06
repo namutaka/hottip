@@ -1,9 +1,7 @@
 <template>
   <v-card flat class="pa-2">
-    <DistributorForm v-model="editDialog"
-      :channelId="channelId"
-      :distributor="editingDistributor"
-      :type="edittingType"
+    <DistributorForm
+      ref="distributorForm"
       @change-distributor="changeDistributor" />
 
     <v-btn primary @click="add(DistributorType.SLACK)">New</v-btn>
@@ -74,29 +72,32 @@ import { deleteDistributor } from '@/graphql/types/deleteDistributor'
   },
 })
 export default class DistributorList extends Vue {
+  $refs!: {
+    distributorForm: DistributorForm;
+  };
+
   readonly DistributorType = DistributorType;
 
   @Prop() private distributors!: Distributor[];
   @Prop() private channelId!: string;
-
-  private editDialog = false;
-  private editingDistributor: Distributor | null = null;
-  private edittingType: DistributorType = DistributorType.SLACK;
 
   scheduleText(dist: Distributor) {
     return scheduleText(dist.schedule);
   }
 
   add(type: DistributorType) {
-    this.editDialog = true;
-    this.editingDistributor = null;
-    this.edittingType = type;
+    this.$refs.distributorForm.open(
+      this.channelId,
+      type
+    );
   }
 
   edit(distributor: Distributor) {
-    this.editDialog = true;
-    this.editingDistributor = distributor;
-    this.edittingType = distributor.type;
+    this.$refs.distributorForm.open(
+      this.channelId,
+      distributor.type,
+      distributor
+    )
   }
 
   async doDelete(distributor: Distributor) {

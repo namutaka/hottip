@@ -61,34 +61,35 @@ export default class TipForm extends Vue {
     form: HTMLFormElement;
   };
 
-  @Prop() private tip!: Tip;
-  @Prop() private channelId!: string;
-  @Model('change', { type: Boolean, default: false}) private dialogValue!: boolean;
+  readonly rules = {
+    title: []
+  };
 
-  defaultTip: Tip = {
+  readonly defaultTip: Tip = {
     id: "",
     title: "",
     text: "",
     enable: true
   };
-  editedTip: Tip = {...this.defaultTip};
-  valid = true;
-  errors: { field: string; messages: string[] }[] = [];
 
-  readonly rules = {
-    title: []
-  }
+  private dialog: boolean = false;
+  private valid = true;
+  private errors: { field: string; messages: string[] }[] = [];
 
-  // このタグの v-model を dialog プロパティに連動させる
-  get dialog() { return this.dialogValue; }
-  set dialog(newDialog) {this.$emit('change', newDialog);}
+  private channelId: String = "";
+  private editedTip: Tip = {...this.defaultTip};
 
-  @Watch('dialogValue')
-  onDialogValueChanged(newVal: boolean) { 
-    // dialogが開いたときに初期化
-    if (newVal) {
-      this.editedTip = {...this.defaultTip, ...this.tip};
-    }
+  open(channelId: string, tip: Tip | null = null) { 
+    this.dialog = true;
+    this.valid = true;
+    this.errors = [];
+    this.$refs.form.resetValidation();
+
+    this.channelId = channelId;
+    this.editedTip = {
+      ...this.defaultTip,
+      ...JSON.parse(JSON.stringify(tip || {})) // deepcopy
+    };
   }
 
   validate_error(field: string): string | boolean {
