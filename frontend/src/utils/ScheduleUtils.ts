@@ -1,9 +1,9 @@
 export const SCHEDULE_TEXT = [
   ['month', '月'],
   ['day', '日'],
-  ['day_of_week', '曜日'],
   ['hour', '時'],
   ['minute', '分'],
+  ['day_of_week', '曜日'],
 ];
 
 export const DAY_OF_WEEK_TEXT = ['月', '火', '水', '木', '金', '土', '日'];

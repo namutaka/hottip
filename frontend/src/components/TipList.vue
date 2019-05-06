@@ -2,7 +2,7 @@
   <v-card flat class="pa-2">
     <TipForm ref="tipForm" @change-tip="changeTip" />
 
-    <v-btn color="primary" @click="add">New Tip</v-btn>
+    <v-btn @click="add">Tips作成</v-btn>
 
     <v-layout column v-if="tips.length">
       <v-flex v-for="tip in tips" :key="tip.id">
@@ -30,9 +30,9 @@
 
     <v-layout column v-else>
       <v-flex>
-        <v-card pa-2>
+        <v-card pa-2 class="elevation-0">
           <v-card-text>
-            no-data
+            Tipsを作成してください
           </v-card-text>
         </v-card>
       </v-flex>
@@ -69,7 +69,11 @@ export default class TipList extends Vue {
   }
 
   async doDelete(tip: Tip) {
-    if (await this.$root.$confirm('Delete', 'Delete this tip')) {
+    if (
+      await this.$root.$confirm(
+        'Tips削除',
+        `Tips "${tip.title}" を削除します`)
+    ) {
       let mutation = this.$apollo
         .mutate<deleteTip>({
           mutation: DELETE_TIP,

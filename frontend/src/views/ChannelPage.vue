@@ -20,7 +20,7 @@
       <v-flex>
         <v-tabs color="grey lighten-3">
           <v-tab ripple>Tips</v-tab>
-          <v-tab ripple>Distributors</v-tab>
+          <v-tab ripple>配信設定</v-tab>
 
           <v-tab-item>
             <TipList

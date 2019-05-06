@@ -1,55 +1,39 @@
 <template>
-  <v-dialog v-model="dialog" max-width="500px">
+  <v-dialog v-model="dialog" max-width="640px">
     <v-form ref="form" v-model="valid" lazy-validation>
       <v-card>
-        <v-card-title class="grey lighten-2 font-weight-bold"
-          >Distributor: {{ editedDistributor.type }}</v-card-title
-        >
-
-        <v-divider></v-divider>
+        <v-card-title>
+          <span class="headline">{{caption}}</span>
+        </v-card-title>
 
         <v-card-text>
           <v-text-field
             v-model="editedDistributor.tipsCount"
-            label="# of Tips"
+            label="一度に送信するTips数"
             :rules="rules.tipsCount"
           />
 
           <label
             aria-hidden="true"
             class="v-label v-label--active theme--light"
-            style="left: 0px; right: auto; font-size: 12px;"
-          >
-            Schedule</label
-          >
+            style="left: 0px; right: auto; font-size: 12px;">
+            配信タイミング
+          </label>
           <Schedule v-model="editedDistributor.schedule" />
 
-          <div v-if="editedDistributor.type == 'SLACK'">
-            <v-text-field
-              :value="attribute.get('channel')"
-              @input="v => attribute.set('channel', v)"
-              :rules="[rules.required]"
-              label="Channel"
-            />
-
-            <v-text-field
-              :value="attribute.get('username')"
-              @input="v => attribute.set('username', v)"
-              :rules="[rules.required]"
-              label="Username"
-            />
-
-            <v-text-field
-              :value="attribute.get('icon')"
-              @input="v => attribute.set('icon', v)"
-              :rules="[rules.required]"
-              label="Icon"
-            />
-          </div>
+          <v-text-field
+            v-for="field in ATTRIBUTE_FIELDS[editedDistributor.type]"
+            :key="field.key"
+            :value="attribute.get(field.key)"
+            @input="v => attribute.set(field.key, v)"
+            :rules="[rules.required]"
+            :label="field.label"
+            :placeholder="field.placeholder"
+          />
         </v-card-text>
 
         <v-card-actions>
-          <v-btn flat @click="close">Cancel</v-btn>
+          <v-btn flat color="grey" @click="close">Cancel</v-btn>
           <v-spacer />
           <v-btn flat color="primary" @click="save">Save</v-btn>
         </v-card-actions>
@@ -59,14 +43,7 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  Model,
-  Emit,
-  Watch,
-  Vue,
-} from 'vue-property-decorator';
+import { Component, Emit, Vue } from 'vue-property-decorator';
 import { CREATE_DISTRIBUTOR, UPDATE_DISTRIBUTOR } from '@/graphql/queries';
 import Schedule from '@/components/Schedule.vue';
 import { QueryResult } from 'vue-apollo/types/vue-apollo';
@@ -74,34 +51,17 @@ import { createDistributor } from '@/graphql/types/createDistributor';
 import { updateDistributor } from '@/graphql/types/updateDistributor';
 import { Distributor, KeyValue } from '@/types/models';
 import { DistributorType } from '../../types/globalTypes';
-
-class Attribute {
-  constructor(private attribute: KeyValue[]) {}
-
-  get(key: string) {
-    let kv = this.attribute.find(kv => kv.key == key);
-    return kv ? kv.value : '';
-  }
-
-  set(key: string, value: string) {
-    let kv = this.attribute.find(kv => kv.key == key);
-    if (kv) {
-      kv.value = value;
-    } else {
-      this.attribute.push({ key, value });
-    }
-  }
-}
+import { Attribute, ATTRIBUTE_FIELDS } from '@/utils/AttributeUtils'
 
 // graphql向けオブジェクトで__typenameがあるとエラーになるため除去する
-function treat(obj: any): any {
+function normalize(obj: any): any {
   if (Array.isArray(obj)) {
-    return obj.map(v => treat(v));
+    return obj.map(v => normalize(v));
   } else if (typeof obj == 'object') {
     let newObj: any = { ...obj };
     delete newObj['__typename'];
     for (let key of Object.keys(newObj)) {
-      newObj[key] = treat(newObj[key]);
+      newObj[key] = normalize(newObj[key]);
     }
     return newObj;
   } else {
@@ -119,12 +79,15 @@ export default class DistributorForm extends Vue {
     form: HTMLFormElement;
   };
 
+  readonly ATTRIBUTE_FIELDS = ATTRIBUTE_FIELDS;
+
   readonly rules = {
     tipsCount: [
-      (v: string) => !!v || 'Required',
-      (v: string) => /^[0-9]*$/.test(v) || 'Invalid number',
+      (v: string) => !!v || '必須入力です',
+      (v: string) => /^[0-9]*$/.test(v) || '数字を入力してください',
+      () => this.validate_error('tipsCount'),
     ],
-    required: (v: string) => !!v || 'Required',
+    required: (v: string) => !!v || '必須入力です',
   };
 
   readonly defaultDistributor: Distributor = {
@@ -163,6 +126,14 @@ export default class DistributorForm extends Vue {
     this.attribute = new Attribute(this.editedDistributor.attribute);
   }
 
+  get caption() {
+    if (this.editedDistributor.id) {
+      return `配信設定編集: ${this.editedDistributor.type}`;
+    } else {
+      return `配信設定作成: ${this.editedDistributor.type}`;
+    }
+  }
+
   validate_error(field: string): string | boolean {
     let error = this.errors.find(i => i.field == field);
     if (error) {
@@ -185,7 +156,7 @@ export default class DistributorForm extends Vue {
           mutation: CREATE_DISTRIBUTOR,
           variables: {
             channelId: this.channelId,
-            ...treat(this.editedDistributor),
+            ...normalize(this.editedDistributor),
           },
           fetchPolicy: 'no-cache',
         });
@@ -193,7 +164,7 @@ export default class DistributorForm extends Vue {
         mutation = this.$apollo.mutate<updateDistributor>({
           mutation: UPDATE_DISTRIBUTOR,
           variables: {
-            ...treat(this.editedDistributor),
+            ...normalize(this.editedDistributor),
           },
           fetchPolicy: 'no-cache',
         });

@@ -25,7 +25,7 @@
               <v-list-tile @click="edit">
                 <v-list-tile-title>
                   <v-icon color="grey lighten-1" class="mr-2">edit</v-icon>
-                  EDIT
+                  変更
                 </v-list-tile-title>
               </v-list-tile>
 
@@ -34,7 +34,7 @@
               <v-list-tile @click="doDelete">
                 <v-list-tile-title>
                   <v-icon color="grey lighten-1" class="mr-2">delete</v-icon>
-                  DELETE
+                  削除
                 </v-list-tile-title>
               </v-list-tile>
             </v-list>
@@ -84,7 +84,12 @@ export default class Channel extends Vue {
   }
 
   async doDelete() {
-    if (await this.$root.$confirm('Delete', 'Delete this channel')) {
+    if (
+      await this.$root.$confirm(
+        'チャンネル削除',
+        'チャンネルを削除します。' +
+        '登録されているTipsや配信先設定もあわせて削除されます')
+    ) {
       let mutation = this.$apollo
         .mutate<deleteChannel>({
           mutation: DELETE_CHANNEL,

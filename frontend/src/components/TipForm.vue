@@ -2,38 +2,29 @@
   <v-dialog v-model="dialog" max-width="500px">
     <v-form ref="form" v-model="valid" lazy-validation>
       <v-card>
-        <v-card-title class="grey lighten-2 font-weight-bold">Tip</v-card-title>
+        <v-card-title>
+          <span class="headline">{{ caption }}</span>
+        </v-card-title>
 
-        <v-divider></v-divider>
+        <v-card-text>
+          <v-text-field
+            v-model="editedTip.title"
+            label="タイトル"
+            :rules="rules.title"
+          />
 
-        <v-text-field
-          v-model="editedTip.title"
-          label="Title"
-          :rules="rules.title"
-          full-width
-          single-line
-          hide-details
-        />
+          <v-textarea
+            v-model="editedTip.text"
+            label="本文"
+          ></v-textarea>
 
-        <v-divider></v-divider>
-
-        <v-textarea
-          v-model="editedTip.text"
-          label="Text"
-          full-width
-          single-line
-        ></v-textarea>
-
-        <v-divider></v-divider>
-
-        <div class="ma-2">
           <v-switch value label="Use" v-model="editedTip.enable"></v-switch>
-        </div>
+        </v-card-text>
 
         <v-card-actions>
-          <v-btn flat @click="close">Cancel</v-btn>
+          <v-btn color="grey" flat @click="close">Cancel</v-btn>
           <v-spacer />
-          <v-btn flat color="primary" @click="save">Save</v-btn>
+          <v-btn color="primary" flat @click="save">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-form>
@@ -41,14 +32,7 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  Model,
-  Emit,
-  Watch,
-  Vue,
-} from 'vue-property-decorator';
+import { Component, Emit, Vue } from 'vue-property-decorator';
 import { CREATE_TIP, UPDATE_TIP } from '@/graphql/queries';
 import { Tip } from '@/types/models';
 import { QueryResult } from 'vue-apollo/types/vue-apollo';
@@ -62,7 +46,13 @@ export default class TipForm extends Vue {
   };
 
   readonly rules = {
-    title: [],
+    title: [
+      (value: string) => !!value || '必須入力です',
+      () => this.validate_error('title'),
+    ],
+    text: [
+      () => this.validate_error('text'),
+    ]
   };
 
   readonly defaultTip: Tip = {
@@ -90,6 +80,14 @@ export default class TipForm extends Vue {
       ...this.defaultTip,
       ...JSON.parse(JSON.stringify(tip || {})), // deepcopy
     };
+  }
+
+  get caption() {
+    if (this.editedTip.id) {
+      return "Tips編集";
+    } else {
+      return "Tips作成";
+    }
   }
 
   validate_error(field: string): string | boolean {

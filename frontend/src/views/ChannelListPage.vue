@@ -1,15 +1,36 @@
 <template>
-  <div class="channel_list">
+  <v-container class="channel_list grid-list-xl">
     <ChannelForm ref="channelForm" @change-channel="openChannel" />
 
-    <ChannelList
-      :channels="allChannels"
-      @click-channel="openChannel"
-      :loading="loading"
-    >
-      <v-btn color="primary" dark class="mb-2" @click="add">New Channel</v-btn>
-    </ChannelList>
-  </div>
+    <v-layout wrap>
+      <v-flex xs12>
+        <v-card dark color="indigo lighten-2">
+          <v-card-title primary-title>
+            <h1 class="mr-4">Hot Tips</h1>
+            <div>
+              Hot Tips はちょっとした情報を定期的に届けるルールです。<br />
+              チャンネル に登録した Tips を指定した配信先に順番に送信します。<br />
+              最初に チャンネル を作成し、その中にTipsや配信先をそれぞれ設定してください。
+            </div>
+          </v-card-title>
+        </v-card>
+      </v-flex>
+
+      <v-flex>
+        <v-btn
+          color="primary"
+          dark
+          class="mb-2"
+          @click="add">チャンネル作成</v-btn>
+
+        <ChannelList
+          :channels="allChannels"
+          @click-channel="openChannel"
+          :loading="loading"
+        />
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script lang="ts">

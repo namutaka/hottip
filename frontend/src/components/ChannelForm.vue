@@ -2,36 +2,34 @@
   <v-dialog v-model="dialog" max-width="500px">
     <v-card>
       <v-card-title>
-        <span class="headline">新規作成</span>
+        <span class="headline">{{caption}}</span>
       </v-card-title>
 
       <v-form ref="form" v-model="valid" lazy-validation>
         <v-card-text>
-          <v-container grid-list-md>
-            <v-text-field
-              :rules="rules.name"
-              v-model="editedChannel.name"
-              label="名前"
-            ></v-text-field>
-            <v-textarea
-              v-model="editedChannel.description"
-              label="説明"
-            ></v-textarea>
-          </v-container>
+          <v-text-field
+            :rules="rules.name"
+            v-model="editedChannel.name"
+            label="名前"
+          ></v-text-field>
+          <v-textarea
+            v-model="editedChannel.description"
+            label="説明"
+          ></v-textarea>
         </v-card-text>
       </v-form>
 
       <v-card-actions>
         <v-btn color="grey" flat @click="close">Cancel</v-btn>
         <v-spacer></v-spacer>
-        <v-btn color="primary darken-1" flat @click="save">Save</v-btn>
+        <v-btn color="primary" flat @click="save">Save</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script lang="ts">
-import { Component, Emit, Watch, Vue } from 'vue-property-decorator';
+import { Component, Emit, Vue } from 'vue-property-decorator';
 import { CREATE_CHANNEL, UPDATE_CHANNEL } from '@/graphql/queries';
 import { createChannel } from '@/graphql/types/createChannel';
 import { updateChannel } from '@/graphql/types/updateChannel';
@@ -46,7 +44,7 @@ export default class ChannelForm extends Vue {
 
   readonly rules = {
     name: [
-      (value: string) => !!value || 'Required.',
+      (value: string) => !!value || '必須入力です',
       () => this.validate_error('name'),
     ],
   };
@@ -70,6 +68,14 @@ export default class ChannelForm extends Vue {
     this.$refs.form.resetValidation();
 
     this.editedChannel = { ...this.defaultChannel, ...channel };
+  }
+
+  get caption() {
+    if (this.editedChannel.id) {
+      return "チャンネル編集";
+    } else {
+      return "チャンネル作成";
+    }
   }
 
   validate_error(field: string): string | boolean {

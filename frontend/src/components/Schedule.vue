@@ -1,8 +1,46 @@
 <template>
-  <div class="schedule_input">
-    <v-container v-for="([field, label], index) in SCHEDULE_TEXT" :key="field">
-      <v-layout row align-center>
-        <v-flex xs1 align-center>
+  <div class="schedule_input mb-4">
+    <v-tooltip bottom>
+      <template v-slot:activator="{ on }">
+        <v-icon
+          color="primary"
+          dark
+          class="right"
+          v-on="on">help</v-icon>
+      </template>
+      <table>
+        <tr>
+          <td colspan="2">(表記例)</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>5日のみ</td>
+        </tr>
+        <tr>
+          <td>2-6</td>
+          <td>2日〜6日(両方含む)</td>
+        </tr>
+        <tr>
+          <td>*/3</td>
+          <td>3日間隔</td>
+        </tr>
+        <tr>
+          <td>10-30/5</td>
+          <td>10日〜30日の間で5日間隔</td>
+        </tr>
+        <tr>
+          <td>5,2-6,*/5</td>
+          <td>コンマで複数条件を列挙</td>
+        </tr>
+      </table>
+    </v-tooltip>
+
+    <v-container class="pa-0">
+      <v-layout
+        v-for="([field, label]) in SCHEDULE_TEXT"
+        :key="field"
+        row align-center>
+        <v-flex xs2 class="text-xs-center pt-3">
           {{ label }}
         </v-flex>
 
@@ -21,8 +59,7 @@
                 <v-text-field
                   v-model="values[field + '_spec']"
                   :disabled="values[field] != 'spec'"
-                  label="例) 1,2 2-5 */3"
-                  hide-details
+                  placeholder="例) 1,2 2-5 */3"
                   single-line
                   :rules="values[field] == 'spec' ? rules.spec : []"
                   @change="input"
@@ -48,41 +85,6 @@
             </v-flex>
           </v-layout>
         </v-flex>
-
-        <v-flex xs1 align-right>
-          <div v-if="index == 0">
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on }">
-                <v-icon color="primary" dark v-on="on">help</v-icon>
-              </template>
-              <table>
-                <tr>
-                  <td colspan="2">(表記例)</td>
-                </tr>
-                <tr>
-                  <td>5</td>
-                  <td>5日のみ</td>
-                </tr>
-                <tr>
-                  <td>2-6</td>
-                  <td>2日〜6日(両方含む)</td>
-                </tr>
-                <tr>
-                  <td>*/3</td>
-                  <td>3日間隔</td>
-                </tr>
-                <tr>
-                  <td>10-30/5</td>
-                  <td>10日〜30日の間で5日間隔</td>
-                </tr>
-                <tr>
-                  <td>5,2-6,*/5</td>
-                  <td>コンマで複数条件を列挙</td>
-                </tr>
-              </table>
-            </v-tooltip>
-          </div>
-        </v-flex>
       </v-layout>
     </v-container>
   </div>
@@ -91,10 +93,8 @@
 <script lang="ts">
 import {
   Component,
-  Prop,
   Model,
   Emit,
-  Watch,
   Vue,
 } from 'vue-property-decorator';
 import { SCHEDULE_TEXT, DAY_OF_WEEK_TEXT } from '@/utils/ScheduleUtils';
@@ -115,7 +115,7 @@ export default class Schedule extends Vue {
             .every(v =>
               /^(?:[0-9]+(?:-[0-9]+)?|\*)(?:\/[0-9]+)?$/.test(v.trim()),
             )) ||
-        'invalid format',
+        'フォーマットが不正です',
     ],
   };
 
@@ -177,17 +177,7 @@ export default class Schedule extends Vue {
 </script>
 
 <style>
-.schedule_input {
-  margin-bottom: 15px;
-}
-.schedule_input .container {
-  padding: 0 8px;
-}
-.schedule_input .v-input--selection-controls {
-  margin-top: 0;
-}
-.schedule_input .v-text-field {
-  margin-top: 0;
-  padding-top: 0;
+.schedule_input > .container {
+  margin-top: -16px;
 }
 </style>
