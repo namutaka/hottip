@@ -43,7 +43,6 @@
       </v-layout>
     </v-container>
 
-
     <v-divider class="mx-3" />
 
     <v-card-actions class="font-weight-light mx-3 px-0 py-2">
@@ -63,20 +62,20 @@
 
 <script lang="ts">
 import { Component, Prop, Emit, Vue } from 'vue-property-decorator';
-import { Channel as ChannelType } from '@/types/models'
+import { Channel as ChannelType } from '@/types/models';
 import ChannelForm from '@/components/ChannelForm.vue';
-import { deleteChannel } from '@/graphql/types/deleteChannel'
-import { DELETE_CHANNEL } from '@/graphql/queries'
+import { deleteChannel } from '@/graphql/types/deleteChannel';
+import { DELETE_CHANNEL } from '@/graphql/queries';
 
 @Component({
   components: {
-    ChannelForm
-  }
+    ChannelForm,
+  },
 })
 export default class Channel extends Vue {
   $refs!: {
-    channelForm: ChannelForm
-  }
+    channelForm: ChannelForm;
+  };
 
   @Prop() private channel!: ChannelType;
 
@@ -85,17 +84,19 @@ export default class Channel extends Vue {
   }
 
   async doDelete() {
-    if(await this.$root.$confirm("Delete", "Delete this channel")) {
+    if (await this.$root.$confirm('Delete', 'Delete this channel')) {
       let mutation = this.$apollo
         .mutate<deleteChannel>({
           mutation: DELETE_CHANNEL,
           variables: {
-            id: this.channel.id
+            id: this.channel.id,
           },
-          fetchPolicy: "no-cache"
+          fetchPolicy: 'no-cache',
         })
-        .then(({ data: { deleteChannel }}) => {
-          if (!deleteChannel) { throw "result is null"; }
+        .then(({ data: { deleteChannel } }) => {
+          if (!deleteChannel) {
+            throw 'result is null';
+          }
           if (deleteChannel.ok) {
             this.deleteChannel(this.channel);
           }
@@ -105,7 +106,6 @@ export default class Channel extends Vue {
         });
     }
   }
-
 
   @Emit()
   deleteChannel(channel: ChannelType) {

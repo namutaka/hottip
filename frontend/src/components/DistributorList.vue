@@ -2,7 +2,8 @@
   <v-card flat class="pa-2">
     <DistributorForm
       ref="distributorForm"
-      @change-distributor="changeDistributor" />
+      @change-distributor="changeDistributor"
+    />
 
     <v-btn primary @click="add(DistributorType.SLACK)">New</v-btn>
 
@@ -13,33 +14,40 @@
             <v-list dense>
               <v-list-tile>
                 <v-list-tile-content class="item-label font-weight-light gray"
-                  >Type</v-list-tile-content>
+                  >Type</v-list-tile-content
+                >
                 <v-list-tile-content>{{ dist.type }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
                 <v-list-tile-content class="item-label font-weight-light gray"
-                  ># of Tips</v-list-tile-content>
-                <v-list-tile-content>{{ dist.tipsCount }} 件づつ</v-list-tile-content>
+                  ># of Tips</v-list-tile-content
+                >
+                <v-list-tile-content
+                  >{{ dist.tipsCount }} 件づつ</v-list-tile-content
+                >
               </v-list-tile>
               <v-list-tile>
                 <v-list-tile-content class="item-label font-weight-light gray"
-                  >schedule</v-list-tile-content>
-                <v-list-tile-content>{{ scheduleText(dist) }}</v-list-tile-content>
+                  >schedule</v-list-tile-content
+                >
+                <v-list-tile-content>{{
+                  scheduleText(dist)
+                }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile v-for="(item, index) in dist.attribute" :key="index">
                 <v-list-tile-content
                   class="item-label font-weight-light gray"
-                  >{{ item.key }}</v-list-tile-content>
+                  >{{ item.key }}</v-list-tile-content
+                >
                 <v-list-tile-content>{{ item.value }}</v-list-tile-content>
               </v-list-tile>
             </v-list>
 
             <v-card-actions>
               <v-btn flat small color="primary" @click="edit(dist)">EDIT</v-btn>
-              <v-spacer/>
+              <v-spacer />
               <v-btn flat small @click="doDelete(dist)">DELETE</v-btn>
             </v-card-actions>
-
           </v-card>
         </v-flex>
       </template>
@@ -64,7 +72,7 @@ import DistributorForm from '@/components/DistributorForm.vue';
 import { Distributor } from '@/types/models';
 import { DistributorType } from '../../types/globalTypes';
 import { DELETE_DISTRIBUTOR } from '@/graphql/queries';
-import { deleteDistributor } from '@/graphql/types/deleteDistributor'
+import { deleteDistributor } from '@/graphql/types/deleteDistributor';
 
 @Component({
   components: {
@@ -86,32 +94,31 @@ export default class DistributorList extends Vue {
   }
 
   add(type: DistributorType) {
-    this.$refs.distributorForm.open(
-      this.channelId,
-      type
-    );
+    this.$refs.distributorForm.open(this.channelId, type);
   }
 
   edit(distributor: Distributor) {
     this.$refs.distributorForm.open(
       this.channelId,
       distributor.type,
-      distributor
-    )
+      distributor,
+    );
   }
 
   async doDelete(distributor: Distributor) {
-    if(await this.$root.$confirm("Delete", "Delete this dist")) {
+    if (await this.$root.$confirm('Delete', 'Delete this dist')) {
       let mutation = this.$apollo
         .mutate<deleteDistributor>({
           mutation: DELETE_DISTRIBUTOR,
           variables: {
-            id: distributor.id
+            id: distributor.id,
           },
-          fetchPolicy: "no-cache"
+          fetchPolicy: 'no-cache',
         })
-        .then(({ data: { deleteDistributor }}) => {
-          if (!deleteDistributor) { throw "result is null"; }
+        .then(({ data: { deleteDistributor } }) => {
+          if (!deleteDistributor) {
+            throw 'result is null';
+          }
           if (deleteDistributor.ok) {
             this.deleteDistributor(distributor);
           }

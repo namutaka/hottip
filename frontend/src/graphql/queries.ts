@@ -99,10 +99,19 @@ export const DELETE_CHANNEL = gql`
   }
 `;
 
-
 export const CREATE_TIP = gql`
-  mutation createTip($channelId: ID!, $title: String!, $text: String, $enable: Boolean) {
-    result: createTip(channelId: $channelId, title: $title, text: $text, enable: $enable) {
+  mutation createTip(
+    $channelId: ID!
+    $title: String!
+    $text: String
+    $enable: Boolean
+  ) {
+    result: createTip(
+      channelId: $channelId
+      title: $title
+      text: $text
+      enable: $enable
+    ) {
       tip {
         id
         title
@@ -118,7 +127,12 @@ export const CREATE_TIP = gql`
 `;
 
 export const UPDATE_TIP = gql`
-  mutation updateTip($id: ID!, $title: String, $text: String, $enable: Boolean) {
+  mutation updateTip(
+    $id: ID!
+    $title: String
+    $text: String
+    $enable: Boolean
+  ) {
     result: updateTip(id: $id, title: $title, text: $text, enable: $enable) {
       tip {
         id
@@ -144,17 +158,18 @@ export const DELETE_TIP = gql`
 
 export const CREATE_DISTRIBUTOR = gql`
   mutation createDistributor(
-      $channelId: ID!,
-      $schedule: String,
-      $type: String!,
-      $attribute: [KeyValueInput!]!,
-      $tipsCount: Int) {
+    $channelId: ID!
+    $schedule: String
+    $type: String!
+    $attribute: [KeyValueInput!]!
+    $tipsCount: Int
+  ) {
     result: createDistributor(
-        channelId: $channelId,
-        schedule: $schedule,
-        type:  $type,
-        attribute: $attribute,
-        tipsCount: $tipsCount
+      channelId: $channelId
+      schedule: $schedule
+      type: $type
+      attribute: $attribute
+      tipsCount: $tipsCount
     ) {
       distributor {
         id
@@ -176,17 +191,18 @@ export const CREATE_DISTRIBUTOR = gql`
 
 export const UPDATE_DISTRIBUTOR = gql`
   mutation updateDistributor(
-      $id: ID!,
-      $schedule: String,
-      $type: String,
-      $attribute: [KeyValueInput!],
-      $tipsCount: Int) {
+    $id: ID!
+    $schedule: String
+    $type: String
+    $attribute: [KeyValueInput!]
+    $tipsCount: Int
+  ) {
     result: updateDistributor(
-        id: $id,
-        schedule: $schedule,
-        type: $type,
-        attribute: $attribute,
-        tipsCount: $tipsCount
+      id: $id
+      schedule: $schedule
+      type: $type
+      attribute: $attribute
+      tipsCount: $tipsCount
     ) {
       distributor {
         id

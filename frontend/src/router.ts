@@ -12,7 +12,7 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      redirect: { name: 'channels' }
+      redirect: { name: 'channels' },
     },
     {
       path: '/channels',

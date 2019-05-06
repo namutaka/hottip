@@ -11,7 +11,7 @@
     <v-layout column v-else>
       <v-flex>
         <Channel
-          :channel="channel" 
+          :channel="channel"
           @change-channel="changeChannel"
           @delete-channel="deleteChannel"
         />
@@ -28,7 +28,7 @@
               :tips="channel.tips"
               @change-tip="changeTip"
               @delete-tip="deleteTip"
-              />
+            />
           </v-tab-item>
 
           <v-tab-item>
@@ -37,7 +37,7 @@
               :distributors="channel.distributors"
               @change-distributor="changeDistributor"
               @delete-distributor="deleteDistributor"
-              />
+            />
           </v-tab-item>
         </v-tabs>
       </v-flex>
@@ -51,8 +51,8 @@ import Channel from '@/components/Channel.vue';
 import TipList from '@/components/TipList.vue';
 import DistributorList from '@/components/DistributorList.vue';
 import { CHANNEL } from '@/graphql/queries';
-import { channel_channel } from '@/graphql/types/channel'
-import { Channel as ChannelType, Tip, Distributor } from '@/types/models'
+import { channel_channel } from '@/graphql/types/channel';
+import { Channel as ChannelType, Tip, Distributor } from '@/types/models';
 
 @Component({
   apollo: {
@@ -61,7 +61,7 @@ import { Channel as ChannelType, Tip, Distributor } from '@/types/models'
       variables() {
         return {
           id: this.$route.params.channelId,
-        }
+        };
       },
     },
   },
@@ -83,7 +83,7 @@ export default class ChannelPage extends Vue {
   }
 
   deleteChannel(channel: ChannelType) {
-    this.$router.push({name: 'channels'});
+    this.$router.push({ name: 'channels' });
   }
 
   changeTip(tip: Tip) {
@@ -102,7 +102,9 @@ export default class ChannelPage extends Vue {
   }
 
   changeDistributor(distributor: Distributor) {
-    let index = this.channel.distributors.findIndex((d: Distributor) => d.id === distributor.id);
+    let index = this.channel.distributors.findIndex(
+      (d: Distributor) => d.id === distributor.id,
+    );
     if (index >= 0) {
       // NOTE 代入だとdistributors更新イベントが発生しない
       Object.assign(this.channel.distributors[index], distributor);
@@ -112,7 +114,9 @@ export default class ChannelPage extends Vue {
   }
 
   deleteDistributor(distributor: Distributor) {
-    let index = this.channel.distributors.findIndex((d: Distributor) => d.id === distributor.id);
+    let index = this.channel.distributors.findIndex(
+      (d: Distributor) => d.id === distributor.id,
+    );
     this.channel.distributors.splice(index, 1);
   }
 }

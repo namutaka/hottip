@@ -2,9 +2,9 @@
   <v-dialog v-model="dialog" max-width="500px">
     <v-form ref="form" v-model="valid" lazy-validation>
       <v-card>
-        <v-card-title
-          class="grey lighten-2 font-weight-bold"
-        >Distributor: {{ editedDistributor.type }}</v-card-title>
+        <v-card-title class="grey lighten-2 font-weight-bold"
+          >Distributor: {{ editedDistributor.type }}</v-card-title
+        >
 
         <v-divider></v-divider>
 
@@ -12,14 +12,16 @@
           <v-text-field
             v-model="editedDistributor.tipsCount"
             label="# of Tips"
-              :rules="rules.tipsCount"
+            :rules="rules.tipsCount"
           />
 
           <label
             aria-hidden="true"
             class="v-label v-label--active theme--light"
-            style="left: 0px; right: auto; font-size: 12px;">
-                Schedule</label>
+            style="left: 0px; right: auto; font-size: 12px;"
+          >
+            Schedule</label
+          >
           <Schedule v-model="editedDistributor.schedule" />
 
           <div v-if="editedDistributor.type == 'SLACK'">
@@ -43,34 +45,38 @@
               :rules="[rules.required]"
               label="Icon"
             />
-
           </div>
         </v-card-text>
 
         <v-card-actions>
           <v-btn flat @click="close">Cancel</v-btn>
           <v-spacer />
-          <v-btn flat color="primary"
-            @click="save">Save</v-btn>
+          <v-btn flat color="primary" @click="save">Save</v-btn>
         </v-card-actions>
-
       </v-card>
     </v-form>
   </v-dialog>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Model, Emit, Watch, Vue } from 'vue-property-decorator';
+import {
+  Component,
+  Prop,
+  Model,
+  Emit,
+  Watch,
+  Vue,
+} from 'vue-property-decorator';
 import { CREATE_DISTRIBUTOR, UPDATE_DISTRIBUTOR } from '@/graphql/queries';
 import Schedule from '@/components/Schedule.vue';
 import { QueryResult } from 'vue-apollo/types/vue-apollo';
-import { createDistributor } from '@/graphql/types/createDistributor'
-import { updateDistributor } from '@/graphql/types/updateDistributor'
-import { Distributor, KeyValue } from '@/types/models'
+import { createDistributor } from '@/graphql/types/createDistributor';
+import { updateDistributor } from '@/graphql/types/updateDistributor';
+import { Distributor, KeyValue } from '@/types/models';
 import { DistributorType } from '../../types/globalTypes';
 
 class Attribute {
-  constructor(private attribute: KeyValue[]) {};
+  constructor(private attribute: KeyValue[]) {}
 
   get(key: string) {
     let kv = this.attribute.find(kv => kv.key == key);
@@ -82,7 +88,7 @@ class Attribute {
     if (kv) {
       kv.value = value;
     } else {
-      this.attribute.push({key, value});
+      this.attribute.push({ key, value });
     }
   }
 }
@@ -90,9 +96,9 @@ class Attribute {
 // graphql向けオブジェクトで__typenameがあるとエラーになるため除去する
 function treat(obj: any): any {
   if (Array.isArray(obj)) {
-    return obj.map((v) => treat(v));
+    return obj.map(v => treat(v));
   } else if (typeof obj == 'object') {
-    let newObj: any = {...obj};
+    let newObj: any = { ...obj };
     delete newObj['__typename'];
     for (let key of Object.keys(newObj)) {
       newObj[key] = treat(newObj[key]);
@@ -105,8 +111,8 @@ function treat(obj: any): any {
 
 @Component({
   components: {
-    Schedule
-  }
+    Schedule,
+  },
 })
 export default class DistributorForm extends Vue {
   $refs!: {
@@ -116,25 +122,26 @@ export default class DistributorForm extends Vue {
   readonly rules = {
     tipsCount: [
       (v: string) => !!v || 'Required',
-      (v: string) => /^[0-9]*$/.test(v) || 'Invalid number'
+      (v: string) => /^[0-9]*$/.test(v) || 'Invalid number',
     ],
-    required: (v: string) => !!v || 'Required'
+    required: (v: string) => !!v || 'Required',
   };
 
   readonly defaultDistributor: Distributor = {
-    id: "",
+    id: '',
     type: DistributorType.SLACK,
-    schedule: '{"month": "*", "day": "*", "day_of_week": "*", "hour": "*", "minute": "*"}',
+    schedule:
+      '{"month": "*", "day": "*", "day_of_week": "*", "hour": "*", "minute": "*"}',
     tipsCount: 1,
-    attribute: []
+    attribute: [],
   };
 
   private dialog: boolean = false;
   private valid = true;
   private errors: { field: string; messages: string[] }[] = [];
 
-  private channelId: String = "";
-  private editedDistributor: Distributor = { ... this.defaultDistributor };
+  private channelId: String = '';
+  private editedDistributor: Distributor = { ...this.defaultDistributor };
   private attribute: Attribute = new Attribute([]);
 
   open(
@@ -151,7 +158,7 @@ export default class DistributorForm extends Vue {
     this.editedDistributor = {
       ...this.defaultDistributor,
       type,
-      ...JSON.parse(JSON.stringify(distributor || {})) // deepcopy
+      ...JSON.parse(JSON.stringify(distributor || {})), // deepcopy
     };
     this.attribute = new Attribute(this.editedDistributor.attribute);
   }
@@ -174,29 +181,29 @@ export default class DistributorForm extends Vue {
     if (this.$refs.form.validate()) {
       let mutation: Promise<QueryResult<createDistributor | updateDistributor>>;
       if (!this.editedDistributor.id) {
-        mutation = this.$apollo
-          .mutate<createDistributor>({
-            mutation: CREATE_DISTRIBUTOR,
-            variables: {
-              channelId: this.channelId,
-              ...treat(this.editedDistributor)
-            },
-            fetchPolicy: "no-cache"
-          });
+        mutation = this.$apollo.mutate<createDistributor>({
+          mutation: CREATE_DISTRIBUTOR,
+          variables: {
+            channelId: this.channelId,
+            ...treat(this.editedDistributor),
+          },
+          fetchPolicy: 'no-cache',
+        });
       } else {
-        mutation = this.$apollo
-          .mutate<updateDistributor>({
-            mutation: UPDATE_DISTRIBUTOR,
-            variables: {
-              ...treat(this.editedDistributor)
-            },
-            fetchPolicy: "no-cache"
-          });
+        mutation = this.$apollo.mutate<updateDistributor>({
+          mutation: UPDATE_DISTRIBUTOR,
+          variables: {
+            ...treat(this.editedDistributor),
+          },
+          fetchPolicy: 'no-cache',
+        });
       }
 
       mutation
-        .then(({ data: { result }}) => {
-          if (!result) { throw "result is null"; }
+        .then(({ data: { result } }) => {
+          if (!result) {
+            throw 'result is null';
+          }
           return result;
         })
         .then(({ distributor, errors }) => {

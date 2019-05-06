@@ -6,7 +6,7 @@ import {
 } from 'vue-cli-plugin-apollo/graphql-client';
 import Cookies from 'js-cookie';
 import { setContext } from 'apollo-link-context';
-import { onError } from "apollo-link-error";
+import { onError } from 'apollo-link-error';
 
 // Install the vue plugin
 Vue.use(VueApollo);
@@ -23,8 +23,8 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)
     graphQLErrors.map(({ message, locations, path }) =>
       console.log(
-        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-      )
+        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+      ),
     );
   if (networkError) {
     // @ts-ignore
@@ -59,15 +59,17 @@ const defaultOptions = {
   // note: don't override httpLink here, specify httpLink options in the
   // httpLinkOptions property of defaultOptions.
   // Djangoのcsrftoken認証対応
-  link: errorLink.concat(setContext((_, { headers }) => {
-    return {
-      headers: {
-        ...headers,
-        'X-CSRFToken': Cookies.get('csrftoken'),
-        'X-Requested-With': 'XMLHttpRequest',
-      },
-    };
-  })),
+  link: errorLink.concat(
+    setContext((_, { headers }) => {
+      return {
+        headers: {
+          ...headers,
+          'X-CSRFToken': Cookies.get('csrftoken'),
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+      };
+    }),
+  ),
 
   // Override default cache
   // cache: myCache

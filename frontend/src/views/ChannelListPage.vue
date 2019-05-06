@@ -6,12 +6,8 @@
       :channels="allChannels"
       @click-channel="openChannel"
       :loading="loading"
-      >
-      <v-btn color="primary"
-        dark
-        class="mb-2"
-        @click="add"
-        >New Channel</v-btn>
+    >
+      <v-btn color="primary" dark class="mb-2" @click="add">New Channel</v-btn>
     </ChannelList>
   </div>
 </template>
@@ -22,7 +18,10 @@ import ChannelList from '@/components/ChannelList.vue';
 import ChannelForm from '@/components/ChannelForm.vue';
 import { Channel } from '@/types/models';
 import { ALL_CHANNELS } from '@/graphql/queries';
-import { allChannels_allChannels, allChannels } from '@/graphql/types/allChannels'
+import {
+  allChannels_allChannels,
+  allChannels,
+} from '@/graphql/types/allChannels';
 
 @Component({
   components: {
@@ -38,14 +37,14 @@ import { allChannels_allChannels, allChannels } from '@/graphql/types/allChannel
         } else {
           return [];
         }
-      }
+      },
     },
   },
 })
 export default class Channels extends Vue {
   $refs!: {
-    channelForm: ChannelForm
-  }
+    channelForm: ChannelForm;
+  };
 
   allChannels!: Channel[];
 

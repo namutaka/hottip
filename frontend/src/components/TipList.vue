@@ -1,8 +1,6 @@
 <template>
   <v-card flat class="pa-2">
-    <TipForm
-      ref="tipForm"
-      @change-tip="changeTip" />
+    <TipForm ref="tipForm" @change-tip="changeTip" />
 
     <v-btn color="primary" @click="add">New Tip</v-btn>
 
@@ -12,17 +10,18 @@
           <v-flex absolute right>
             <v-chip v-if="tip.enable" small label color="green" dark>ON</v-chip>
             <v-chip v-else small label color="indigo" dark>OFF</v-chip>
-
           </v-flex>
 
           <v-card-text class="pt-4 px-4">
             <h4>{{ tip.title }}</h4>
-            <div><pre>{{ tip.text }}</pre></div>
+            <div>
+              <pre>{{ tip.text }}</pre>
+            </div>
           </v-card-text>
 
           <v-card-actions>
             <v-btn flat small color="primary" @click="edit(tip)">EDIT</v-btn>
-            <v-spacer/>
+            <v-spacer />
             <v-btn flat small @click="doDelete(tip)">DELETE</v-btn>
           </v-card-actions>
         </v-card>
@@ -38,7 +37,6 @@
         </v-card>
       </v-flex>
     </v-layout>
-
   </v-card>
 </template>
 
@@ -47,7 +45,7 @@ import { Component, Prop, Emit, Vue } from 'vue-property-decorator';
 import TipForm from '@/components/TipForm.vue';
 import { Tip } from '@/types/models';
 import { DELETE_TIP } from '@/graphql/queries';
-import { deleteTip } from '@/graphql/types/deleteTip'
+import { deleteTip } from '@/graphql/types/deleteTip';
 
 @Component({
   components: {
@@ -63,30 +61,27 @@ export default class TipList extends Vue {
   @Prop() private channelId!: string;
 
   add() {
-    this.$refs.tipForm.open(
-      this.channelId
-    );
+    this.$refs.tipForm.open(this.channelId);
   }
 
   edit(tip: Tip) {
-    this.$refs.tipForm.open(
-      this.channelId,
-      tip
-    );
+    this.$refs.tipForm.open(this.channelId, tip);
   }
 
   async doDelete(tip: Tip) {
-    if(await this.$root.$confirm("Delete", "Delete this tip")) {
+    if (await this.$root.$confirm('Delete', 'Delete this tip')) {
       let mutation = this.$apollo
         .mutate<deleteTip>({
           mutation: DELETE_TIP,
           variables: {
-            id: tip.id
+            id: tip.id,
           },
-          fetchPolicy: "no-cache"
+          fetchPolicy: 'no-cache',
         })
-        .then(({ data: { deleteTip }}) => {
-          if (!deleteTip) { throw "result is null"; }
+        .then(({ data: { deleteTip } }) => {
+          if (!deleteTip) {
+            throw 'result is null';
+          }
           if (deleteTip.ok) {
             this.deleteTip(tip);
           }

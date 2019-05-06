@@ -1,11 +1,8 @@
 <template>
   <v-dialog v-model="dialog" max-width="500px">
-
     <v-form ref="form" v-model="valid" lazy-validation>
       <v-card>
-        <v-card-title
-          class="grey lighten-2 font-weight-bold"
-        >Tip</v-card-title>
+        <v-card-title class="grey lighten-2 font-weight-bold">Tip</v-card-title>
 
         <v-divider></v-divider>
 
@@ -30,10 +27,7 @@
         <v-divider></v-divider>
 
         <div class="ma-2">
-          <v-switch 
-            value 
-            label="Use"
-            v-model="editedTip.enable"></v-switch>
+          <v-switch value label="Use" v-model="editedTip.enable"></v-switch>
         </div>
 
         <v-card-actions>
@@ -41,19 +35,25 @@
           <v-spacer />
           <v-btn flat color="primary" @click="save">Save</v-btn>
         </v-card-actions>
-
       </v-card>
     </v-form>
   </v-dialog>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Model, Emit, Watch, Vue } from 'vue-property-decorator';
+import {
+  Component,
+  Prop,
+  Model,
+  Emit,
+  Watch,
+  Vue,
+} from 'vue-property-decorator';
 import { CREATE_TIP, UPDATE_TIP } from '@/graphql/queries';
 import { Tip } from '@/types/models';
 import { QueryResult } from 'vue-apollo/types/vue-apollo';
-import { createTip } from '@/graphql/types/createTip'
-import { updateTip } from '@/graphql/types/updateTip'
+import { createTip } from '@/graphql/types/createTip';
+import { updateTip } from '@/graphql/types/updateTip';
 
 @Component({})
 export default class TipForm extends Vue {
@@ -62,24 +62,24 @@ export default class TipForm extends Vue {
   };
 
   readonly rules = {
-    title: []
+    title: [],
   };
 
   readonly defaultTip: Tip = {
-    id: "",
-    title: "",
-    text: "",
-    enable: true
+    id: '',
+    title: '',
+    text: '',
+    enable: true,
   };
 
   private dialog: boolean = false;
   private valid = true;
   private errors: { field: string; messages: string[] }[] = [];
 
-  private channelId: String = "";
-  private editedTip: Tip = {...this.defaultTip};
+  private channelId: String = '';
+  private editedTip: Tip = { ...this.defaultTip };
 
-  open(channelId: string, tip: Tip | null = null) { 
+  open(channelId: string, tip: Tip | null = null) {
     this.dialog = true;
     this.valid = true;
     this.errors = [];
@@ -88,7 +88,7 @@ export default class TipForm extends Vue {
     this.channelId = channelId;
     this.editedTip = {
       ...this.defaultTip,
-      ...JSON.parse(JSON.stringify(tip || {})) // deepcopy
+      ...JSON.parse(JSON.stringify(tip || {})), // deepcopy
     };
   }
 
@@ -110,29 +110,29 @@ export default class TipForm extends Vue {
     if (this.$refs.form.validate()) {
       let mutation: Promise<QueryResult<createTip | updateTip>>;
       if (!this.editedTip.id) {
-        mutation = this.$apollo
-          .mutate<createTip>({
-            mutation: CREATE_TIP,
-            variables: {
-              channelId: this.channelId,
-              ...this.editedTip
-            },
-            fetchPolicy: "no-cache"
-          });
+        mutation = this.$apollo.mutate<createTip>({
+          mutation: CREATE_TIP,
+          variables: {
+            channelId: this.channelId,
+            ...this.editedTip,
+          },
+          fetchPolicy: 'no-cache',
+        });
       } else {
-        mutation = this.$apollo
-          .mutate<updateTip>({
-            mutation: UPDATE_TIP,
-            variables: {
-              ...this.editedTip
-            },
-            fetchPolicy: "no-cache"
-          });
+        mutation = this.$apollo.mutate<updateTip>({
+          mutation: UPDATE_TIP,
+          variables: {
+            ...this.editedTip,
+          },
+          fetchPolicy: 'no-cache',
+        });
       }
 
       mutation
-        .then(({ data: { result }}) => {
-          if (!result) { throw "result is null"; }
+        .then(({ data: { result } }) => {
+          if (!result) {
+            throw 'result is null';
+          }
           return result;
         })
         .then(({ tip, errors }) => {

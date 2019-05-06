@@ -33,10 +33,10 @@
 <script lang="ts">
 import { Component, Emit, Watch, Vue } from 'vue-property-decorator';
 import { CREATE_CHANNEL, UPDATE_CHANNEL } from '@/graphql/queries';
-import { createChannel } from '@/graphql/types/createChannel'
-import { updateChannel } from '@/graphql/types/updateChannel'
+import { createChannel } from '@/graphql/types/createChannel';
+import { updateChannel } from '@/graphql/types/updateChannel';
 import { QueryResult } from 'vue-apollo/types/vue-apollo';
-import { Channel } from '@/types/models'
+import { Channel } from '@/types/models';
 
 @Component({})
 export default class ChannelForm extends Vue {
@@ -54,22 +54,22 @@ export default class ChannelForm extends Vue {
   readonly defaultChannel = {
     id: '',
     name: '',
-    description: ''
+    description: '',
   };
 
   private dialog = false;
   private valid = true;
   private errors: { field: string; messages: string[] }[] = [];
 
-  private editedChannel = {...this.defaultChannel};
+  private editedChannel = { ...this.defaultChannel };
 
-  open(channel: Channel | null = null) { 
+  open(channel: Channel | null = null) {
     this.dialog = true;
     this.valid = true;
     this.errors = [];
     this.$refs.form.resetValidation();
 
-    this.editedChannel = {...this.defaultChannel, ...channel};
+    this.editedChannel = { ...this.defaultChannel, ...channel };
   }
 
   validate_error(field: string): string | boolean {
@@ -90,28 +90,28 @@ export default class ChannelForm extends Vue {
     if (this.$refs.form.validate()) {
       let mutation: Promise<QueryResult<createChannel | updateChannel>>;
       if (!this.editedChannel.id) {
-        mutation = this.$apollo
-          .mutate<createChannel>({
-            mutation: CREATE_CHANNEL,
-            variables: {
-              ...this.editedChannel
-            },
-            fetchPolicy: "no-cache"
-          });
+        mutation = this.$apollo.mutate<createChannel>({
+          mutation: CREATE_CHANNEL,
+          variables: {
+            ...this.editedChannel,
+          },
+          fetchPolicy: 'no-cache',
+        });
       } else {
-        mutation = this.$apollo
-          .mutate<updateChannel>({
-            mutation: UPDATE_CHANNEL,
-            variables: {
-              ...this.editedChannel
-            },
-            fetchPolicy: "no-cache"
-          });
+        mutation = this.$apollo.mutate<updateChannel>({
+          mutation: UPDATE_CHANNEL,
+          variables: {
+            ...this.editedChannel,
+          },
+          fetchPolicy: 'no-cache',
+        });
       }
 
       mutation
-        .then(({ data: { result }}) => {
-          if (!result) { throw "result is null"; }
+        .then(({ data: { result } }) => {
+          if (!result) {
+            throw 'result is null';
+          }
           return result;
         })
         .then(({ channel, errors }) => {

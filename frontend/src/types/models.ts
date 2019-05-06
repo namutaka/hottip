@@ -2,7 +2,7 @@
 // models
 //
 
-import { DistributorType } from "../../types/globalTypes";
+import { DistributorType } from '../../types/globalTypes';
 
 export interface Tip {
   id: string;

@@ -1,5 +1,10 @@
 <template>
-  <v-dialog v-model="dialog" :max-width="options.width" @keydown.esc="cancel" v-bind:style="{ zIndex: options.zIndex }">
+  <v-dialog
+    v-model="dialog"
+    :max-width="options.width"
+    @keydown.esc="cancel"
+    v-bind:style="{ zIndex: options.zIndex }"
+  >
     <v-card>
       <v-toolbar dark :color="options.color" dense flat>
         <v-toolbar-title class="white--text">{{ title }}</v-toolbar-title>
@@ -7,7 +12,9 @@
       <v-card-text v-show="!!message">{{ message }}</v-card-text>
       <v-card-actions class="pt-0">
         <v-spacer></v-spacer>
-        <v-btn color="primary darken-1" flat="flat" @click.native="agree">Yes</v-btn>
+        <v-btn color="primary darken-1" flat="flat" @click.native="agree"
+          >Yes</v-btn
+        >
         <v-btn color="grey" flat="flat" @click.native="cancel">Cancel</v-btn>
       </v-card-actions>
     </v-card>
@@ -30,49 +37,52 @@ import { Component, Prop } from 'vue-property-decorator';
  */
 @Component({})
 export default class Confirm extends Vue {
-  dialog = false
-  @Prop() resolve!: (result: boolean) => void
-  @Prop() message!: string
-  @Prop() title!: string
-  @Prop() options!: { color: string, width: number, zIndex: number }
+  dialog = false;
+  @Prop() resolve!: (result: boolean) => void;
+  @Prop() message!: string;
+  @Prop() title!: string;
+  @Prop() options!: { color: string; width: number; zIndex: number };
 
   static open(title: string, message: string, options?: any) {
     options = {
       color: 'primary',
       width: 290,
       zIndex: 200,
-      ...options
-    }
+      ...options,
+    };
 
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       new Confirm({
         propsData: {
-          title, message, options, resolve
-        }
-      })
-    })
+          title,
+          message,
+          options,
+          resolve,
+        },
+      });
+    });
   }
 
   created() {
-      const el = document.createElement('div');
-      document.getElementsByTagName('body')[0].appendChild(el);
-      this.$mount(el);
+    const el = document.createElement('div');
+    document.getElementsByTagName('body')[0].appendChild(el);
+    this.$mount(el);
 
-      this.dialog = true;
+    this.dialog = true;
   }
 
   agree() {
-    this.resolve(true)
-    this.destroy()
+    this.resolve(true);
+    this.destroy();
   }
 
   cancel() {
-    this.resolve(false)
-    this.destroy()
+    this.resolve(false);
+    this.destroy();
   }
 
   destroy() {
-    this.dialog = false
+    this.dialog = false;
 
     // 即座にdomを削除するとtransitionする前に消えてしまうので、200ms待つ
     setTimeout(() => {
@@ -83,5 +93,4 @@ export default class Confirm extends Vue {
     }, 200);
   }
 }
-
 </script>
