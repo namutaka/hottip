@@ -177,7 +177,10 @@ LOGGING = {
 
 
 GRAPHENE = {
-    'SCHEMA': 'hottip.schema.schema'
+    'SCHEMA': 'hottip.schema.schema',
+    'MIDDLEWARE': [
+        'hottip.graphql.timing_middleware'
+    ]
 }
 
 

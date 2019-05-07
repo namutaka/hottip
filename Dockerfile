@@ -54,7 +54,8 @@ ENV \
   UWSGI_LAZY_APPS=1 \
   UWSGI_WSGI_ENV_BEHAVIOR=holy \
   UWSGI_STATIC_MAP="/static/=/app/static/"  \
-  UWSGI_STATIC_EXPIRES_URI="/static/.*\.[a-f0-9]{12,}\.(css|js|png|jpg|jpeg|gif|ico|woff|ttf|otf|svg|scss|map|txt) 315360000"
+  UWSGI_STATIC_EXPIRES_URI="/static/.*\.[a-f0-9]{12,}\.(css|js|png|jpg|jpeg|gif|ico|woff|ttf|otf|svg|scss|map|txt) 315360000" \
+  UWSGI_LOG_FORMAT="host:%(addr) time:%(time) method:%(method) uri:%(uri) proto:%(proto) status:%(status) size:%(size) referer:%(referer) ua:%(uagent)"
 
 # Call collectstatic (customize the following line with the minimal environment variables needed for manage.py to run):
 RUN DATABASE_TYPE=none \
