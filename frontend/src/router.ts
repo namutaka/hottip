@@ -25,7 +25,7 @@ export default new Router({
       component: ChannelPage,
     },
     {
-      path: '/admin/login',
+      path: '/login/?v',
       name: 'login',
       beforeEnter: (to, from, next) => {
         next(false);
@@ -33,7 +33,7 @@ export default new Router({
       },
     },
     {
-      path: '/admin/logout/?next=/&v', // 終端スラッシュをトリムされるのでダミークエリ追加
+      path: '/logout/?v', // 終端スラッシュをトリムされるのでダミークエリ追加
       name: 'logout',
       beforeEnter: (to, from, next) => {
         next(false);

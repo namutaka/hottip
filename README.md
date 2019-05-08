@@ -13,6 +13,10 @@ DATABASE_NAME=hottip
 DATABASE_USER=hottip
 DATABASE_PASSWORD=password
 DATABASE_HOST=localhost
+
+# google oauth2 key & secret
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=
 ```
 
 Run commands

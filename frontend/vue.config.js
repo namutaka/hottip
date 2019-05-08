@@ -5,7 +5,7 @@
 module.exports = {
   devServer: {
     proxy: {
-      '^/(graphql|admin|static/admin)': {
+      '^/(login|logout|social|graphql|admin|static/admin)': {
         target: 'http://localhost:8080',
         changeOrigin: true
       }

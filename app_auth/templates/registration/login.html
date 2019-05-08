@@ -1,0 +1,96 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="{% static 'favicon-16x16.png' %}">
+  <title>HotTip</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
+  <style type="text/css">
+    .primary {
+      background-color: #1976d2 !important;
+      border-color: #1976d2 !important;
+    }
+    .info {
+      background-color: #2196f3 !important;
+      border-color: #2196f3 !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div data-app="true" class="application theme--light">
+    <div class="application--wrap">
+      <main class="v-content" style="padding: 0px;" data-booted="true">
+        <div class="v-content__wrap">
+          <div class="container fluid fill-height">
+            <div class="layout align-center justify-center">
+              <div class="flex md4">
+
+                <div class="elevation-12 v-card v-sheet theme--light">
+                  <form novalidate="novalidate" class="v-form" method="post">
+                    <div class="v-card__title">
+                      <h2>Login</h2>
+                    </div>
+                    <div class="v-card__text pb-1">
+                      {% csrf_token %}
+
+                      {{ form.non_field_errors }}
+                      {% for field in form %}
+                        <div class="v-input v-text-field v-input--is-label-active v-input--is-dirty theme--light mb-3">
+                          <div class="v-input__control">
+                            <div class="v-input__slot">
+                              <div class="v-text-field__slot">
+                                <label
+                                  class="v-label v-label--active theme--light"
+                                  style="left: 0px; right: auto; position: absolute;">{{field.label}}</label>
+                                <input type="text" name="{{field.name}}" value="{{ field.value | default_if_none:'' }}">
+                              </div>
+                            </div>
+                            <div class="v-text-field__details">
+                              <div class="v-messages theme--light">
+                                <div class="v-messages__wrapper">
+                                  <div class="v-messages__message">
+                                    {{ field.errors }}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      {% endfor %}
+
+                    </div>
+
+                    <div class="v-card__actions">
+                      <div class="spacer"></div>
+                      <button type="submit" class="v-btn theme--light primary">
+                        <div class="v-btn__content">Login</div>
+                      </button>
+                    </div>
+                  </form>
+
+                  <hr class="v-divider theme--light grey mx-1 my-3">
+
+                  <div class="v-card__text align-center">
+                    <div class="v-btn__content">
+                      <a href="{% url 'social:begin' 'google-oauth2' %}" class="v-btn theme--light info">
+                        Login with Google
+                      </a>
+                    </div>
+                    <div class="v-card v-sheet theme--light"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </main>
+    </div>
+  </body>
+
+</html>
