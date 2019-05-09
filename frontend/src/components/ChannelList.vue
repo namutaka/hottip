@@ -3,7 +3,7 @@
     :headers="headers"
     :items="channels"
     :loading="loading"
-    no-data-text="no-data"
+    no-data-text="なし"
     class="elevation-1"
     hide-actions
     disable-initial-sort

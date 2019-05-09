@@ -12,7 +12,7 @@ export const USER = gql`
 
 export const ALL_CHANNELS = gql`
   query allChannels {
-    allChannels(first: 50) {
+    allChannels(first: 100) {
       edges {
         node {
           id
