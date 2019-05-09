@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <link rel="icon" href="{% static 'favicon-16x16.png' %}">
-  <title>HotTip</title>
+  <title>HotTips</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons">
   <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
@@ -24,18 +24,18 @@
 </head>
 
 <body>
-  <div data-app="true" class="application theme--light">
+  <div id="app" class="application theme--light" style="display: none;">
     <div class="application--wrap">
       <main class="v-content" style="padding: 0px;" data-booted="true">
         <div class="v-content__wrap">
           <div class="container fluid fill-height">
             <div class="layout align-center justify-center">
-              <div class="flex md4">
+              <div class="flex xs12 sm6 md4">
 
                 <div class="elevation-12 v-card v-sheet theme--light">
                   <form novalidate="novalidate" class="v-form" method="post">
                     <div class="v-card__title">
-                      <h2>Login</h2>
+                      <h2>HotTips</h2>
                     </div>
                     <div class="v-card__text pb-1">
                       {% csrf_token %}
@@ -91,6 +91,13 @@
           </div>
       </main>
     </div>
+
+    <script>
+      // css読み込みの遅れで表示が動いてしまうので読み込み完了後に表示させる
+      window.onload = function() {
+        document.getElementById('app').style.display = 'block';
+      };
+    </script>
   </body>
 
 </html>
