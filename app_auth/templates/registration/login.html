@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <link rel="icon" href="{% static 'favicon-16x16.png' %}">
-  <title>HotTips</title>
+  <title>HotTip</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons">
   <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
@@ -35,14 +35,14 @@
                 <div class="elevation-12 v-card v-sheet theme--light">
                   <form novalidate="novalidate" class="v-form" method="post">
                     <div class="v-card__title">
-                      <h2>HotTips</h2>
+                      <h2>HotTip</h2>
                     </div>
                     <div class="v-card__text pb-1">
                       {% csrf_token %}
 
                       {{ form.non_field_errors }}
                       {% for field in form %}
-                        <div class="v-input v-text-field v-input--is-label-active v-input--is-dirty theme--light mb-3">
+                        <div class="v-input v-text-field v-input--is-label-active v-input--is-dirty theme--light mt-3 mb-3">
                           <div class="v-input__control">
                             <div class="v-input__slot">
                               <div class="v-text-field__slot">

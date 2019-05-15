@@ -29,7 +29,7 @@ import { Component, Prop } from 'vue-property-decorator';
  * Vuetify Confirm Dialog component
  *
  * Call it:
- * if (await this.$root.4confirm('Delete', 'Are you sure?', { color: 'red' })) {
+ * if (await this.$root.$confirm('Delete', 'Are you sure?', { color: 'red' })) {
  *   // yes
  * } else {
  *   // cancel
