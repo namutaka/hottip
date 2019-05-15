@@ -41,6 +41,7 @@ services:
       DATABASE_USER: hottip
       DATABASE_PASSWORD: password
       DJANGO_MANAGEPY_MIGRATE: "on"
+      DJANGO_MANAGEPY_CREATESUPERUSER: "on"
       HOTTIP_BATCH_MODE: 1
     depends_on:
       - db
