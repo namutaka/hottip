@@ -20,6 +20,16 @@
       background-color: #2196f3 !important;
       border-color: #2196f3 !important;
     }
+    .error--text {
+      color: #ff5252!important;
+      caret-color: #ff5252!important;
+    }
+    ul {
+      padding-left: 0;
+    }
+    ul li {
+      list-style: none;
+    }
   </style>
 </head>
 
@@ -40,7 +50,10 @@
                     <div class="v-card__text pb-1">
                       {% csrf_token %}
 
-                      {{ form.non_field_errors }}
+                      <div class="v-messages theme--light error--text">
+                        {{ form.non_field_errors }}
+                      </div>
+
                       {% for field in form %}
                         <div class="v-input v-text-field v-input--is-label-active v-input--is-dirty theme--light mt-3 mb-3">
                           <div class="v-input__control">
@@ -49,11 +62,11 @@
                                 <label
                                   class="v-label v-label--active theme--light"
                                   style="left: 0px; right: auto; position: absolute;">{{field.label}}</label>
-                                <input type="text" name="{{field.name}}" value="{{ field.value | default_if_none:'' }}">
+                                {{field}}
                               </div>
                             </div>
                             <div class="v-text-field__details">
-                              <div class="v-messages theme--light">
+                              <div class="v-messages theme--light error--text">
                                 <div class="v-messages__wrapper">
                                   <div class="v-messages__message">
                                     {{ field.errors }}
