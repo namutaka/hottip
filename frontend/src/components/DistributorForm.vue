@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" max-width="640px">
+  <v-dialog v-model="dialog" max-width="640px" persistent>
     <v-form ref="form" v-model="valid" lazy-validation>
       <v-card>
         <v-card-title>

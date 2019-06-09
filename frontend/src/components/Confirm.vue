@@ -4,6 +4,7 @@
     :max-width="options.width"
     @keydown.esc="cancel"
     v-bind:style="{ zIndex: options.zIndex }"
+    persistent
   >
     <v-card>
       <v-toolbar dark :color="options.color" dense flat>
