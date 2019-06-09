@@ -6,9 +6,9 @@
       <v-flex xs12>
         <v-card dark color="indigo lighten-2">
           <v-card-title primary-title>
-            <h1 class="mr-4">Hot Tips</h1>
+            <h1 class="mr-4">Hot Tip</h1>
             <div>
-              Hot Tips はちょっとした情報を定期的に届けるルールです。<br />
+              Hot Tip はちょっとした情報を定期的に届けるルールです。<br />
               チャンネル に登録した Tips を指定した配信先に順番に送信します。<br />
               最初に チャンネル
               を作成し、その中にTipsや配信先をそれぞれ設定してください。

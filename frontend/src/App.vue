@@ -5,7 +5,7 @@
         <v-icon>home</v-icon>
       </v-btn>
       <v-toolbar-title class="headline">
-        HOT TIPS
+        HOT TIP
       </v-toolbar-title>
       <v-spacer></v-spacer>
 
