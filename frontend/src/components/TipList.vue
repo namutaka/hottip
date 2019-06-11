@@ -1,5 +1,5 @@
 <template>
-  <v-card flat class="pa-2">
+  <v-card flat class="pa-2 tiplist">
     <TipForm ref="tipForm" @change-tip="changeTip" />
 
     <v-btn @click="add">Tips作成</v-btn>
@@ -106,4 +106,8 @@ export default class TipList extends Vue {
 }
 </script>
 
-<style></style>
+<style>
+.tiplist pre {
+  white-space: pre-wrap;
+}
+</style>

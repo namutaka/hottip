@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card class="channel">
     <ChannelForm ref="channelForm" @change-channel="changeChannel" />
 
     <v-container class="px-0 py-1">
@@ -126,7 +126,10 @@ export default class Channel extends Vue {
 </script>
 
 <style>
-.channel-title {
+.channel .channel-title {
   word-break: break-all;
+}
+.channel pre {
+  white-space: pre-wrap;
 }
 </style>

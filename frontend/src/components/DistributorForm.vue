@@ -95,7 +95,7 @@ export default class DistributorForm extends Vue {
     id: '',
     type: DistributorType.SLACK,
     schedule:
-      '{"month": "*", "day": "*", "day_of_week": "*", "hour": "*", "minute": "*"}',
+      '{"month": "*", "day": "*", "day_of_week": "*", "hour": "*", "minute": "0"}',
     tipsCount: 1,
     attribute: [],
   };

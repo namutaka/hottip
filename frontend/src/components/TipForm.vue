@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" max-width="500px" persistent>
+  <v-dialog v-model="dialog" max-width="600px" persistent>
     <v-form ref="form" v-model="valid" lazy-validation>
       <v-card>
         <v-card-title>
@@ -13,7 +13,7 @@
             :rules="rules.title"
           />
 
-          <v-textarea v-model="editedTip.text" label="本文"></v-textarea>
+          <v-textarea v-model="editedTip.text" label="本文" rows="15"></v-textarea>
 
           <v-switch value label="Use" v-model="editedTip.enable"></v-switch>
         </v-card-text>
