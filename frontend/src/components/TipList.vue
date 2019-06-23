@@ -109,5 +109,6 @@ export default class TipList extends Vue {
 <style>
 .tiplist pre {
   white-space: pre-wrap;
+  word-break: break-all;
 }
 </style>
