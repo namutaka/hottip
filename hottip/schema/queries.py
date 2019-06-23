@@ -1,7 +1,9 @@
 import logging
 import graphene
+import django_filters
 from graphene_django import DjangoObjectType
 from django.contrib.auth import models as auth_models
+from django.db.models import Q
 from graphene_django.filter import DjangoFilterConnectionField
 from hottip.models import Channel, Tip, Distributor
 from graphql_relay.node.node import from_global_id
@@ -54,11 +56,27 @@ class DistributorNode(DjangoObjectType):
         return Distributor._meta.get_field('schedule').get_prep_value(data.schedule)
 
 
+class ChannelSearchFilter(django_filters.FilterSet):
+    search = django_filters.CharFilter(method='search_filter')
+
+    def search_filter(self, queryset, name, value):
+        return queryset.filter(
+            Q(name__icontains = value) |
+            Q(description__icontains = value)
+        )
+
+    class Meta:
+        model = Channel
+        fields = {
+            'id': ['exact'],
+            'name': ['exact', 'icontains', 'istartswith'],
+            'description': ['exact', 'icontains', 'istartswith'],
+        }
+
+
 class ChannelNode(DjangoObjectType):
     class Meta:
         model = Channel
-        filter_fields = (
-            'id', 'name', 'description')
         only_fields = (
             'name', 'description',
             'created_at', 'updated_at',)
@@ -85,7 +103,7 @@ class ChannelNode(DjangoObjectType):
 class Query(graphene.ObjectType):
     me = graphene.Field(UserNode)
     channel = graphene.relay.Node.Field(ChannelNode)
-    allChannels = DjangoFilterConnectionField(ChannelNode)
+    allChannels = DjangoFilterConnectionField(ChannelNode, filterset_class=ChannelSearchFilter)
     allTips = DjangoFilterConnectionField(TipNode)
     distributors = graphene.List(DistributorNode)
 

@@ -11,8 +11,8 @@ export const USER = gql`
 `;
 
 export const ALL_CHANNELS = gql`
-  query allChannels {
-    allChannels(first: 100) {
+  query allChannels($count: Int, $cursor: String, $search: String) {
+    allChannels(first: $count, after: $cursor, search: $search) {
       edges {
         node {
           id
@@ -21,11 +21,19 @@ export const ALL_CHANNELS = gql`
           description
           createdAt
           updatedAt
+          distributors {
+            type
+            attribute {
+              key
+              value
+            }
+          }
         }
-        cursor
       }
       pageInfo {
+        startCursor
         endCursor
+        hasPreviousPage
         hasNextPage
       }
     }
