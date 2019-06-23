@@ -13,7 +13,11 @@
             :rules="rules.title"
           />
 
-          <v-textarea v-model="editedTip.text" label="本文" rows="15"></v-textarea>
+          <v-textarea
+            v-model="editedTip.text"
+            label="本文"
+            rows="15"
+          ></v-textarea>
 
           <v-switch value label="Use" v-model="editedTip.enable"></v-switch>
         </v-card-text>

@@ -57,7 +57,10 @@ import ChannelList from '@/components/ChannelList.vue';
 import ChannelForm from '@/components/ChannelForm.vue';
 import { Channel } from '@/types/models';
 import { ALL_CHANNELS } from '@/graphql/queries';
-import { allChannels, allChannels_allChannels_pageInfo } from '@/graphql/types/allChannels';
+import {
+  allChannels,
+  allChannels_allChannels_pageInfo,
+} from '@/graphql/types/allChannels';
 import { notEmpty } from '@/utils/TypeUtils';
 import { SmartQuery } from 'vue-apollo/types/vue-apollo';
 
@@ -73,12 +76,12 @@ import { SmartQuery } from 'vue-apollo/types/vue-apollo';
         if (data.allChannels) {
           return {
             channels: data.allChannels.edges.map((edge: any) => edge.node),
-            pageInfo: data.allChannels.pageInfo
+            pageInfo: data.allChannels.pageInfo,
           };
         } else {
           return {
             channels: [],
-            pageInfo: {}
+            pageInfo: {},
           };
         }
       },
@@ -87,7 +90,7 @@ import { SmartQuery } from 'vue-apollo/types/vue-apollo';
           count: this.pageSize,
           search: this.searchText,
         };
-      }
+      },
     },
   },
 })
@@ -102,7 +105,7 @@ export default class ChannelListPage extends Vue {
   };
   pageSize = 20;
 
-  searchText = "";
+  searchText = '';
 
   mounted() {
     // ページ遷移時に内容を確実に更新
@@ -150,11 +153,11 @@ export default class ChannelListPage extends Vue {
             __typename: previousResult.allChannels.__typename,
             edges: [
               ...previousResult.allChannels.edges,
-              ...fetchMoreResult.allChannels.edges
+              ...fetchMoreResult.allChannels.edges,
             ],
             pageInfo: fetchMoreResult.allChannels.pageInfo,
           },
-        }
+        };
       },
     });
   }
