@@ -34,6 +34,7 @@
 | DATABASE_PASSWORD                | password                                 | DB接続パスワード |
 | HOTTIP_SLACK_WEBHOOK_URL         | `https://hooks.slack.com/services/ZZZ/ZZZ` | Slack送信用のWebhook URL |
 | HOTTIP_BATCH_MODE                | 1,0                                      | 配信バッチ処理を実行するかどうか(1: 実行する、0: 実行しない) |
+| HOTTIP_APP_BASE_URL              | https://hottip.exampl.com/               | アプリのベースURL |
 | SOCIAL_AUTH_GOOGLE_OAUTH2_KEY    |                                          | Google OAuth2認証キー |
 | SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET |                                          | Google OAuth2 認証のシークレットトークン |
 | DJANGO_MANAGEPY_MIGRATE          | on,off                                   | アプリ起動時にDBマイグレーションを実行するかどうか(on: 実行する)。Dockerイメージでのみ使用 |

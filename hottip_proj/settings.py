@@ -194,7 +194,7 @@ GRAPHENE = {
 # app settings
 SLACK_WEBHOOK_URL = os.getenv('HOTTIP_SLACK_WEBHOOK_URL', '')
 HOTTIP_BATCH_MODE = strtobool(os.getenv('HOTTIP_BATCH_MODE', 'false'))
-
+HOTTIP_APP_BASE_URL = os.getenv('HOTTIP_APP_BASE_URL', '')
 
 #
 # social auth settings

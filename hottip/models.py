@@ -141,12 +141,13 @@ class Distributor(models.Model):
 
         if tips:
             setting = self.parse_setting()
-            self.__do_distribute(tips, setting)
+            self.__do_distribute(channel, tips, setting)
             DistributedLog.record_logs(tips)
 
-    def __do_distribute(self, tips, setting):
+    def __do_distribute(self, channel, tips, setting):
         if self.type == self.Type.EMAIL.name:
             services.post_email(
+                channel,
                 setting.email,
                 setting.subject,
                 tips
@@ -154,6 +155,7 @@ class Distributor(models.Model):
 
         elif self.type == self.Type.SLACK.name:
             services.post_slack(
+                channel,
                 setting.channel,
                 setting.username,
                 setting.icon,
@@ -162,6 +164,7 @@ class Distributor(models.Model):
 
         elif self.type == self.Type.WEBHOOK.name:
             services.post_webhook(
+                channel,
                 setting.webhook_url,
                 tips
             )
