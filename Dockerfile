@@ -40,7 +40,7 @@ RUN set -ex \
 COPY --from=frontend_builder \
   /build/dist/static ./hottip/static
 COPY --from=frontend_builder \
-  /build/dist/index.html ./hottip/templates/hottip/
+  /build/dist/*.* ./hottip/templates/hottip/
 COPY . .
 
 ENV DJANGO_SETTINGS_MODULE=hottip_proj.settings
