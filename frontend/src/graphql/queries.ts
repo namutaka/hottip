@@ -22,6 +22,7 @@ export const ALL_CHANNELS = gql`
           createdAt
           updatedAt
           distributors {
+            id
             type
             attribute {
               key

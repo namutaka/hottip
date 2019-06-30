@@ -31,6 +31,7 @@ export interface Channel {
   description: string;
   createdAt: any;
   updatedAt: any;
+  distributors?: Distributor[];
 }
 
 export interface ChannelFull extends Channel {
