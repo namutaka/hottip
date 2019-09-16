@@ -99,11 +99,11 @@ export default class Channel extends Vue {
           },
           fetchPolicy: 'no-cache',
         })
-        .then(({ data: { deleteChannel } }) => {
-          if (!deleteChannel) {
+        .then(({ data }) => {
+          if (!data || !data.deleteChannel) {
             throw 'result is null';
           }
-          if (deleteChannel.ok) {
+          if (data.deleteChannel.ok) {
             this.deleteChannel(this.channel);
           }
         })

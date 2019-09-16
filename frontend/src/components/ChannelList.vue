@@ -19,8 +19,11 @@
           <template v-if="props.item.distributors">
             <v-chip
               class="distributor_title"
-              color="indigo lighten-1" text-color="white"
-              v-for="dist in props.item.distributors" :key="dist.id">
+              color="indigo lighten-1"
+              text-color="white"
+              v-for="dist in props.item.distributors"
+              :key="dist.id"
+            >
               {{ distributorTitle(dist) }}
             </v-chip>
           </template>

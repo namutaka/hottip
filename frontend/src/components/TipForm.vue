@@ -36,7 +36,7 @@
 import { Component, Emit, Vue } from 'vue-property-decorator';
 import { CREATE_TIP, UPDATE_TIP } from '@/graphql/queries';
 import { Tip } from '@/types/models';
-import { QueryResult } from 'vue-apollo/types/vue-apollo';
+import { FetchResult } from 'apollo-link';
 import { createTip } from '@/graphql/types/createTip';
 import { updateTip } from '@/graphql/types/updateTip';
 
@@ -105,7 +105,7 @@ export default class TipForm extends Vue {
   save() {
     this.errors = [];
     if (this.$refs.form.validate()) {
-      let mutation: Promise<QueryResult<createTip | updateTip>>;
+      let mutation: Promise<FetchResult<createTip | updateTip>>;
       if (!this.editedTip.id) {
         mutation = this.$apollo.mutate<createTip>({
           mutation: CREATE_TIP,
@@ -126,11 +126,11 @@ export default class TipForm extends Vue {
       }
 
       mutation
-        .then(({ data: { result } }) => {
-          if (!result) {
+        .then(({ data }) => {
+          if (!data || !data.result) {
             throw 'result is null';
           }
-          return result;
+          return data.result;
         })
         .then(({ tip, errors }) => {
           if (tip) {

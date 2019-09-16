@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 import { setContext } from 'apollo-link-context';
 import { onError } from 'apollo-link-error';
 import router from '@/router';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 
 // Install the vue plugin
 Vue.use(VueApollo);
@@ -87,6 +88,7 @@ export function createProvider(options = {}) {
   const { apolloClient, wsClient } = createApolloClient({
     ...defaultOptions,
     ...options,
+    cache: new InMemoryCache(), // BUG https://github.com/Akryum/vue-apollo/issues/631
   });
   apolloClient.wsClient = wsClient;
 

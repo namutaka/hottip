@@ -13,7 +13,7 @@ LOGGER = logging.getLogger(__name__)
 class UserNode(DjangoObjectType):
     class Meta:
         model = auth_models.User
-        exclude_fields = ('password')
+        exclude = ('password',)
 
 
 class TipNode(DjangoObjectType):

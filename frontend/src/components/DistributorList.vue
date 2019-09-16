@@ -141,11 +141,11 @@ export default class DistributorList extends Vue {
           },
           fetchPolicy: 'no-cache',
         })
-        .then(({ data: { deleteDistributor } }) => {
-          if (!deleteDistributor) {
+        .then(({ data }) => {
+          if (!data || !data.deleteDistributor) {
             throw 'result is null';
           }
-          if (deleteDistributor.ok) {
+          if (data.deleteDistributor.ok) {
             this.deleteDistributor(distributor);
           }
         })

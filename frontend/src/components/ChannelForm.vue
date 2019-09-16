@@ -33,7 +33,7 @@ import { Component, Emit, Vue } from 'vue-property-decorator';
 import { CREATE_CHANNEL, UPDATE_CHANNEL } from '@/graphql/queries';
 import { createChannel } from '@/graphql/types/createChannel';
 import { updateChannel } from '@/graphql/types/updateChannel';
-import { QueryResult } from 'vue-apollo/types/vue-apollo';
+import { FetchResult } from 'apollo-link';
 import { Channel } from '@/types/models';
 
 @Component({})
@@ -94,7 +94,7 @@ export default class ChannelForm extends Vue {
   save() {
     this.errors = [];
     if (this.$refs.form.validate()) {
-      let mutation: Promise<QueryResult<createChannel | updateChannel>>;
+      let mutation: Promise<FetchResult<createChannel | updateChannel>>;
       if (!this.editedChannel.id) {
         mutation = this.$apollo.mutate<createChannel>({
           mutation: CREATE_CHANNEL,
@@ -114,11 +114,11 @@ export default class ChannelForm extends Vue {
       }
 
       mutation
-        .then(({ data: { result } }) => {
-          if (!result) {
+        .then(({ data }) => {
+          if (!data || !data.result) {
             throw 'result is null';
           }
-          return result;
+          return data.result;
         })
         .then(({ channel, errors }) => {
           if (channel) {

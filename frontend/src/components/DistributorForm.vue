@@ -47,7 +47,7 @@
 import { Component, Emit, Vue } from 'vue-property-decorator';
 import { CREATE_DISTRIBUTOR, UPDATE_DISTRIBUTOR } from '@/graphql/queries';
 import Schedule from '@/components/Schedule.vue';
-import { QueryResult } from 'vue-apollo/types/vue-apollo';
+import { FetchResult } from 'apollo-link';
 import { createDistributor } from '@/graphql/types/createDistributor';
 import { updateDistributor } from '@/graphql/types/updateDistributor';
 import { Distributor, KeyValue } from '@/types/models';
@@ -151,7 +151,7 @@ export default class DistributorForm extends Vue {
   save() {
     this.errors = [];
     if (this.$refs.form.validate()) {
-      let mutation: Promise<QueryResult<createDistributor | updateDistributor>>;
+      let mutation: Promise<FetchResult<createDistributor | updateDistributor>>;
       if (!this.editedDistributor.id) {
         mutation = this.$apollo.mutate<createDistributor>({
           mutation: CREATE_DISTRIBUTOR,
@@ -172,11 +172,11 @@ export default class DistributorForm extends Vue {
       }
 
       mutation
-        .then(({ data: { result } }) => {
-          if (!result) {
+        .then(({ data }) => {
+          if (!data || !data.result) {
             throw 'result is null';
           }
-          return result;
+          return data.result;
         })
         .then(({ distributor, errors }) => {
           if (distributor) {

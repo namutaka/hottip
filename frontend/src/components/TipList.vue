@@ -80,11 +80,11 @@ export default class TipList extends Vue {
           },
           fetchPolicy: 'no-cache',
         })
-        .then(({ data: { deleteTip } }) => {
-          if (!deleteTip) {
+        .then(({ data }) => {
+          if (!data || !data.deleteTip) {
             throw 'result is null';
           }
-          if (deleteTip.ok) {
+          if (data.deleteTip.ok) {
             this.deleteTip(tip);
           }
         })
