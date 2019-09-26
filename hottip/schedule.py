@@ -21,12 +21,15 @@ def start():
 def setup_distributor_jobs():
     for distributor in Distributor.objects.all():
         logger.info('add distoribution job: %s', distributor)
-        scheduler.add_job(
-            _emit_distributor,
-            CronTrigger(**distributor.schedule),
-            args=[distributor.id],
-            id=f'distribute:{distributor.id}',
-            replace_existing=True)
+        try:
+            scheduler.add_job(
+                _emit_distributor,
+                CronTrigger(**distributor.schedule),
+                args=[distributor.id],
+                id=f'distribute:{distributor.id}',
+                replace_existing=True)
+        except Exception as err:
+            logger.exception('Failed to add_job: %s', err)
 
 
 def _reload_jobs():
