@@ -19,7 +19,7 @@
 
 以下にDockerイメージを作ってあります。
 
-* https://cloud.docker.com/repository/docker/namutaka/hottip
+* https://hub.docker.com/r/namutaka/hottip
 
 
 起動に指定する環境変数は以下の通りです。
